@@ -1,0 +1,27 @@
+# Lokale Build- und Werkzeugausgaben, Flashsicherungen, Herstellerdownloads
+.pio/
+.pio-core/
+build/
+managed_components/
+.vscode/
+.idea/
+sdkconfig
+sdkconfig.old
+__pycache__/
+*.pyc
+*.log
+
+# Zugangsdaten und lokale Einstellungen
+.env
+.env.*
+!.env.example
+!.env.sample
+platformio_lokal.ini
+.claude/settings.local.json
+.claude/worktrees/
+
+# Quellschriften der Erzeugungswerkzeuge (OFL), nur lokal, nicht versioniert
+scripts/vlw/quellen/*.ttf
+scripts/vu/quellen/*.ttf
+# Bildvorlagen des Kassettengenerators, nur lokal, nicht versioniert
+scripts/kassetten/quellen/

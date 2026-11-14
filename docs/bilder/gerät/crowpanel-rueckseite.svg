@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1068 668" width="1068" height="668" font-family="Helvetica, Arial, sans-serif">
+<rect width="1068" height="668" rx="18" fill="#f4f6f5"/>
+<rect x="40.0" y="40.0" width="988.0" height="588.0" rx="14" fill="#24473a" stroke="#4f7d69" stroke-width="3"/>
+<circle cx="52.2" cy="52.0" r="6.4" fill="none" stroke="#e8e4d8" stroke-width="2"/>
+<circle cx="1016.0" cy="52.0" r="6.4" fill="none" stroke="#e8e4d8" stroke-width="2"/>
+<circle cx="52.2" cy="616.0" r="6.4" fill="none" stroke="#e8e4d8" stroke-width="2"/>
+<circle cx="1016.0" cy="616.0" r="6.4" fill="none" stroke="#e8e4d8" stroke-width="2"/>
+<rect x="494.4" y="405.6" width="80.0" height="16.0" rx="2" fill="#6d8f80"/>
+<text x="534.4" y="438.0" font-size="14" fill="#cfe3d9" text-anchor="middle" font-weight="normal">Displaykabel</text>
+<rect x="504.4" y="68.2" width="60.0" height="14.0" rx="2" fill="#6d8f80"/>
+<text x="534.4" y="99.2" font-size="14" fill="#cfe3d9" text-anchor="middle" font-weight="normal">Kamera (ungenutzt)</text>
+<rect x="1001.2" y="206.4" width="16.0" height="36.0" rx="2" fill="#e8e4d8"/>
+<text x="969.2" y="220.0" font-size="17" fill="#ffffff" text-anchor="end" font-weight="bold">POWER</text><text x="969.2" y="238.4" font-size="13" fill="#cfe3d9" text-anchor="end" font-weight="normal">Hauptschalter</text>
+<rect x="994.8" y="274.0" width="14.4" height="36.8" rx="2" fill="#e8e4d8"/>
+<text x="969.2" y="288.0" font-size="17" fill="#ffffff" text-anchor="end" font-weight="bold">UART0</text><text x="969.2" y="306.4" font-size="13" fill="#cfe3d9" text-anchor="end" font-weight="normal">USB-C: Flashen, Strom</text>
+<circle cx="998.8" cy="334.8" r="5" fill="#f2b134"/>
+<circle cx="1018.8" cy="334.8" r="5" fill="#e5484d"/>
+<text x="969.2" y="339.6" font-size="13" fill="#cfe3d9" text-anchor="end" font-weight="normal">Lade- und Betriebs-LED</text>
+<rect x="994.4" y="357.6" width="14.4" height="36.8" rx="2" fill="#e8e4d8"/>
+<text x="969.2" y="371.6" font-size="17" fill="#ffffff" text-anchor="end" font-weight="bold">USB2.0</text><text x="969.2" y="390.0" font-size="13" fill="#cfe3d9" text-anchor="end" font-weight="normal">USB-C: Strom</text>
+<rect x="990.4" y="437.8" width="24.0" height="50.0" rx="2" fill="#e8e4d8"/>
+<text x="969.2" y="458.4" font-size="17" fill="#ffffff" text-anchor="end" font-weight="bold">UART3-IN</text><text x="969.2" y="476.8" font-size="13" fill="#cfe3d9" text-anchor="end" font-weight="normal">XH2.54: TX, RX, 5 V, GND</text>
+<rect x="896.8" y="52.2" width="10.4" height="73.2" rx="2" fill="#e8e4d8"/>
+<rect x="958.8" y="52.2" width="10.4" height="73.2" rx="2" fill="#e8e4d8"/>
+<text x="881.2" y="76.0" font-size="17" fill="#ffffff" text-anchor="end" font-weight="bold">Funkmodul</text><text x="881.2" y="94.4" font-size="13" fill="#cfe3d9" text-anchor="end" font-weight="normal">Sockel 2 x 7, frei</text>
+<rect x="94.4" y="59.6" width="36.0" height="20.0" rx="2" fill="#e8e4d8"/>
+<rect x="182.4" y="60.4" width="36.0" height="20.0" rx="2" fill="#e8e4d8"/>
+<text x="112.4" y="102.0" font-size="17" fill="#ffffff" text-anchor="middle" font-weight="bold">UART1</text>
+<text x="200.4" y="102.0" font-size="17" fill="#ffffff" text-anchor="middle" font-weight="bold">I2C</text>
+<text x="71.2" y="124.0" font-size="13" fill="#cfe3d9" text-anchor="start" font-weight="normal">HY2.0, 4-polig</text>
+<text x="71.2" y="142.4" font-size="13" fill="#cfe3d9" text-anchor="start" font-weight="normal">I2C: DS1307 hier</text>
+<rect x="48.2" y="492.2" width="18.0" height="18.0" rx="2" fill="#e8e4d8"/>
+<text x="85.2" y="497.2" font-size="15" fill="#ffffff" text-anchor="start" font-weight="bold">BOOT</text>
+<rect x="48.2" y="550.2" width="18.0" height="18.0" rx="2" fill="#e8e4d8"/>
+<text x="57.2" y="586.4" font-size="15" fill="#ffffff" text-anchor="middle" font-weight="bold">RST</text>
+<rect x="87.2" y="539.2" width="48.0" height="56.0" rx="3" fill="#e8e4d8"/>
+<text x="111.2" y="563.2" font-size="15" fill="#24473a" text-anchor="middle" font-weight="bold">SD</text>
+<rect x="169.2" y="605.4" width="28.0" height="18.0" rx="2" fill="#e8e4d8"/>
+<text x="227.2" y="587.2" font-size="17" fill="#ffffff" text-anchor="start" font-weight="bold">SPK rechts</text><text x="227.2" y="605.6" font-size="13" fill="#cfe3d9" text-anchor="start" font-weight="normal">PH2.0, 4 Ω</text>
+<rect x="473.6" y="583.0" width="124.0" height="22.0" rx="2" fill="#e8e4d8"/>
+<text x="535.6" y="558.0" font-size="17" fill="#ffffff" text-anchor="middle" font-weight="bold">GPIO-Leiste 2 x 12</text><text x="535.6" y="576.4" font-size="13" fill="#cfe3d9" text-anchor="middle" font-weight="normal">3,3 V, 5 V, IO2-5, IO25, IO49-54</text>
+<rect x="886.4" y="605.0" width="28.0" height="18.0" rx="2" fill="#e8e4d8"/>
+<rect x="950.0" y="605.0" width="28.0" height="18.0" rx="2" fill="#e8e4d8"/>
+<text x="900.4" y="571.2" font-size="17" fill="#ffffff" text-anchor="middle" font-weight="bold">BAT</text><text x="900.4" y="589.6" font-size="13" fill="#cfe3d9" text-anchor="middle" font-weight="normal">Li-Zelle 3,7 V</text>
+<text x="965.6" y="540.0" font-size="17" fill="#ffffff" text-anchor="middle" font-weight="bold">SPK</text><text x="965.6" y="558.4" font-size="13" fill="#cfe3d9" text-anchor="middle" font-weight="normal">links</text>
+<text x="40" y="656" font-size="15" fill="#5b6b64">Schematisch nach dem Platinenlayout V1.2 des 10.1-Zoll, Blick auf die Rückseite. 7 und 9 Zoll haben dieselben Anschlüsse.</text>
+</svg>

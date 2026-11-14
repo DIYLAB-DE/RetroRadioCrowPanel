@@ -1,0 +1,6 @@
+# Name, Type, SubType, Offset, Size, Flags
+# Eigene Tabelle: NVS, Firmware, Senderliste und ein freigehaltener Bereich slave_fw. Der Rückweg zur Werksfirmware ist das Abbild aus dem Herstellerrepository.
+nvs, data, nvs, 0x9000, 0x6000,
+factory, app, factory, 0x10000, 0xC00000,
+stations, data, 0x80, 0xC10000, 0x10000,
+slave_fw, data, 0x40, 0xC20000, 0x200000,

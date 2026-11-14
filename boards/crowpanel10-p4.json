@@ -1,0 +1,26 @@
+{
+  "build": {
+    "core": "esp32",
+    "extra_flags": [
+      "-DBOARD_HAS_PSRAM"
+    ],
+    "f_cpu": "400000000L",
+    "f_flash": "80000000L",
+    "f_psram": "200000000L",
+    "flash_mode": "qio",
+    "mcu": "esp32p4",
+    "chip_variant": "esp32p4",
+    "variant": "crowpanel10"
+  },
+  "frameworks": ["arduino"],
+  "name": "Elecrow CrowPanel Advanced 7, 9, 10.1 - ESP32-P4 ab Revision 3.0 (esp32p4)",
+  "upload": {
+    "flash_size": "16MB",
+    "maximum_ram_size": 512000,
+    "maximum_size": 12582912,
+    "require_upload_port": true,
+    "speed": 921600
+  },
+  "url": "https://www.elecrow.com/wiki/CrowPanel_Advanced_10.1inch_ESP32-P4_HMI_AI_Display_1024x600_IPS.html",
+  "vendor": "Elecrow"
+}
