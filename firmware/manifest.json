@@ -1,0 +1,42 @@
+{
+  "format": 1,
+  "name": "RetroRadioCrowPanel",
+  "chip": "ESP32-P4",
+  "version": "v26.11.14",
+  "datum": "14.11.2026",
+  "quelle": "https://github.com/DIYLAB-DE/RetroRadioCrowPanel/tree/v26.11.14",
+  "fassungen": [
+    {
+      "umgebung": "crowpanel_p4es",
+      "kernvariante": "esp32p4_es",
+      "revision_von": 0,
+      "revision_bis": 299,
+      "dateien": [
+        {
+          "name": "bootloader.bin",
+          "pfad": "v26.11.14/crowpanel_p4es/bootloader.bin",
+          "adresse": 8192,
+          "groesse": 21472,
+          "sha256": "080a739f3145948cafdf71bcc1dfb3a2d262b1916684a013dff3cf2c358b7bde",
+          "md5": "9a205d1e43452ee70ba42e1ed2319033"
+        },
+        {
+          "name": "partitions.bin",
+          "pfad": "v26.11.14/crowpanel_p4es/partitions.bin",
+          "adresse": 32768,
+          "groesse": 3072,
+          "sha256": "07f0a0505e35fdf09eb63eadb9456b1dbe44a0a17dfe99e3c1100b558a6e6da6",
+          "md5": "3b95b294c49b6b77e6db463d35a9e074"
+        },
+        {
+          "name": "firmware.bin",
+          "pfad": "v26.11.14/crowpanel_p4es/firmware.bin",
+          "adresse": 65536,
+          "groesse": 4095696,
+          "sha256": "b629e32a9f28dfffe9b8fe2d31affe71d5854489153874d5e4777605b0040a72",
+          "md5": "c30907eabe28a8aaf318d36fff4b6604"
+        }
+      ]
+    }
+  ]
+}
