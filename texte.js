@@ -16,7 +16,8 @@ export const TEXTE = {
     "schritte.3": "Die Seite zeigt das gefundene Gerät. „Installieren“ überträgt die Firmware und prüft sie, das dauert rund eine Minute.",
     "schritte.erhalten": "Einstellungen, PIN, WLAN-Zugangsdaten und Sender bleiben bei jedem Update erhalten. Die Firmware des WLAN-Chips wird nicht verändert.",
 
-    "browser.fehlt": "Dieser Browser kann nicht auf serielle Anschlüsse zugreifen. Bitte Chrome, Edge oder Opera auf einem Rechner verwenden.",
+    "browser.fehlt": "Dieser Browser kann nicht auf serielle Anschlüsse zugreifen. Bitte Chrome, Edge, Opera oder Firefox ab Version {firefox} auf einem Rechner verwenden.",
+    "browser.ungeprueft": "Dieser Browser ist für den Web-Flasher nicht geprüft und deshalb gesperrt. Bitte Chrome, Edge, Opera oder Firefox ab Version {firefox} auf einem Rechner verwenden.",
 
     "knopf.verbinden": "Verbinden",
     "knopf.installieren": "Installieren",
@@ -88,7 +89,8 @@ export const TEXTE = {
     "schritte.3": "The page shows the device it found. “Install” transfers the firmware and verifies it, which takes about a minute.",
     "schritte.erhalten": "Settings, PIN, Wi-Fi credentials and stations are kept with every update. The firmware of the Wi-Fi chip is not changed.",
 
-    "browser.fehlt": "This browser cannot access serial ports. Please use Chrome, Edge or Opera on a computer.",
+    "browser.fehlt": "This browser cannot access serial ports. Please use Chrome, Edge, Opera or Firefox version {firefox} or newer on a computer.",
+    "browser.ungeprueft": "This browser has not been tested with the web flasher and is therefore locked. Please use Chrome, Edge, Opera or Firefox version {firefox} or newer on a computer.",
 
     "knopf.verbinden": "Connect",
     "knopf.installieren": "Install",

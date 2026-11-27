@@ -1,6 +1,6 @@
 /** Oberfläche und Ablauf des Web-Flashers: Firmwareliste laden, Gerät zeigen, Dateien laden und prüfen, schreiben, vergleichen, neu starten. Die Reihenfolge der Prüfungen folgt dem geprüften Upload in scripts/crowpanel_geraet.py. */
 
-import { CHIP_NAME, FlasherFehler, formatMac, formatMegabyte, formatRevision, gesamtFortschritt, pruefeAbbild, pruefeManifest, sha256Hex, waehleFassung } from "./kern.js";
+import { CHIP_NAME, FIREFOX_AB, FlasherFehler, formatMac, formatMegabyte, formatRevision, gesamtFortschritt, pruefeAbbild, pruefeManifest, sha256Hex, waehleFassung } from "./kern.js";
 import { TEXTE, text } from "./texte.js";
 
 const MANIFEST = "firmware/manifest.json";
@@ -12,9 +12,9 @@ const ANSICHTEN = ["Start", "Beschaeftigt", "Ziel", "Fertig", "Fehler"];
 
 /**
  * Verbindet die Seite mit dem Gerätezugriff und zeigt die Startansicht.
- * @param {{serialVerfuegbar: () => boolean, verbindeGeraet: (optionen: {baud: number, protokoll: (text: string) => void}) => Promise<object>}} zugriff im Betrieb die Funktionen aus geraet.js, im Test eine Attrappe mit denselben Rückgaben
+ * @param {{browserHinweis: () => string | null, verbindeGeraet: (optionen: {baud: number, protokoll: (text: string) => void}) => Promise<object>}} zugriff im Betrieb die Funktionen aus geraet.js, im Test eine Attrappe mit denselben Rückgaben
  */
-export async function starte({ serialVerfuegbar, verbindeGeraet }) {
+export async function starte({ browserHinweis, verbindeGeraet }) {
   const el = (id) => document.getElementById(id);
   const manifestUrl = new URL(MANIFEST, document.baseURI);
   let sprache = waehleSprache();
@@ -22,6 +22,8 @@ export async function starte({ serialVerfuegbar, verbindeGeraet }) {
   let geraet = null;
   let fassung = null;
   let beschaeftigt = false;
+  // Textschlüssel, wenn der Browser nicht freigegeben ist. Dann bleibt „Verbinden“ gesperrt.
+  const hinweis = browserHinweis();
 
   function waehleSprache() {
     let gespeichert = null;
@@ -96,7 +98,7 @@ export async function starte({ serialVerfuegbar, verbindeGeraet }) {
     }
     setze(el("firmware"), "firmware.zeile", { version: manifest.version, datum: manifest.datum });
     el("linkQuelle").href = manifest.quelle;
-    el("verbinden").disabled = !serialVerfuegbar();
+    el("verbinden").disabled = hinweis !== null;
   }
 
   async function ladeDatei(datei) {
@@ -219,7 +221,8 @@ export async function starte({ serialVerfuegbar, verbindeGeraet }) {
   });
 
   el("verbinden").disabled = true;
-  el("browserFehlt").hidden = serialVerfuegbar();
+  if (hinweis !== null) setze(el("browserFehlt"), hinweis, { firefox: FIREFOX_AB });
+  el("browserFehlt").hidden = hinweis === null;
   uebersetze();
   zeige("Start");
   await ladeManifest();
