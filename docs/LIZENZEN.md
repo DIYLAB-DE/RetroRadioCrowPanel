@@ -18,6 +18,7 @@ Der RetroRadioCrowPanel-Quellcode steht wie RetroRadio unter der **GNU GPL Versi
 | M5GFX 0.2.33 | M5Stack, MIT, nur für Sprites, VLW-Schriften und DSI-Ausgabe. M5GFX enthält Teile von LovyanGFX, darunter Bitmapschriften wie DejaVu | Wird von PlatformIO mit den Lizenztexten der Bibliothek geladen |
 | Arduino-ESP32 3.3.7 | Espressif und Mitwirkende, LGPL-2.1-or-later, weitere Bestandteile mit eigenen Vermerken | [LGPL-2.1](lizenzen/LGPL-2.1.txt), [Arduino-ESP32](https://github.com/espressif/arduino-esp32) |
 | ESP-IDF | Espressif und Mitwirkende, überwiegend Apache-2.0, darunter auch der HTTP-Server und cJSON mit eigenen Vermerken | [Apache-2.0](lizenzen/Apache-2.0.txt), [ESP-IDF](https://github.com/espressif/esp-idf) |
+| Web-Flasher unter `webflasher/` | Seite und Ablauf von DIYLAB-DE, GPL-3.0. Enthält unverändert esptool-js 0.7.1 von Espressif Systems (Apache-2.0) mit der Kompression pako 2.1.0 von Vitaly Puzrin und Andrei Tuputcyn (MIT, mit Teilen von zlib) | [Herkunft](../webflasher/esptool-js/README.md), [Apache-2.0](../webflasher/esptool-js/LICENSE), [pako](../webflasher/esptool-js/pako-LICENSE) |
 
 Die PlatformIO-Abhängigkeiten werden anhand der Projektkonfiguration in fester Version bezogen. Ihre Lizenztexte liegen den von PlatformIO geladenen Paketen bei. Aus dem Herstellerrepository des CrowPanels (ohne Lizenzangabe) stammen nur Fakten, kein Code.
 

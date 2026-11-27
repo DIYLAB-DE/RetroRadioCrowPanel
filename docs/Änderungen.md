@@ -4,6 +4,14 @@
 
 Hier steht, was sich von Version zu Version ändert, die neueste Version steht oben. Jede Version erscheint als [Release auf GitHub](https://github.com/DIYLAB-DE/RetroRadioCrowPanel/releases) mit eigener Nummer. Die Nummer zeigt das CrowPanel unter Einstellungen -> Info & Neustart und die Weboberfläche im Abschnitt System. Sie ändert sich nur mit einem neuen Release, auch wenn Du die Firmware selbst baust.
 
+## Nachtrag vom 27.11.2026
+
+Ohne neue Firmware, die Version bleibt v26.11.14. Wer sie schon aufgespielt hat, muss nichts tun.
+
+- **Web-Flasher:** Die fertige Firmware lässt sich jetzt unter [diylab-de.github.io/RetroRadioCrowPanel](https://diylab-de.github.io/RetroRadioCrowPanel/) direkt aus Chrome, Edge oder Opera aufspielen, zur Erstinstallation und für Updates, siehe [Schnellweg: der Web-Flasher](RetroRadioCrowPanel-Ersteinrichtung.md#schnellweg-der-web-flasher). Die Quelle der Seite liegt unter `webflasher/`. Geprüft unter Linux in Chrome an zwei Geräten mit 10,1 Zoll, als Erstinstallation ab Werksfirmware und als Update.
+- **Platinenstand V2.0:** Der Hersteller führt seit November 2026 einen Platinenstand V2.0 mit ESP32-P4 Revision 3.2 und anderem Tonweg. RetroRadioCrowPanel unterstützt ihn noch nicht. Web-Flasher und Upload erkennen solche Geräte am Chip und schreiben nichts auf sie.
+- **Netzteil:** Die Anleitungen empfehlen ein Netzteil nur noch, wenn der Rechner zu wenig Strom liefert oder das Radio ohne Rechner laufen soll. Alle geprüften Geräte liefen auch am USB-Anschluss eines Rechners.
+
 ## v26.11.14 vom 14.11.2026
 
 Die erste öffentliche Version von RetroRadioCrowPanel, [v26.11.14 auf GitHub](https://github.com/DIYLAB-DE/RetroRadioCrowPanel/releases/tag/v26.11.14). Sie ist als Vorabversion gekennzeichnet, weil sie bisher nur an je einem Gerät jeder Größe geprüft ist.

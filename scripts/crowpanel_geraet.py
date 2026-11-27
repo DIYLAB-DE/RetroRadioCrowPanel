@@ -18,6 +18,8 @@ Baudrate von startlog und mitlesen: Umgebungsvariable CROWPANEL_BAUD, ohne Angab
 
 Anschluss: Umgebungsvariable CROWPANEL_PORT oder, ohne Angabe, der einzige angeschlossene CH340. Espressif-Boards mit USB-Serial-JTAG (303a:1001) und der Programmieradapter des Bluetooth-Pico (CH9102F 1a86:55d4) werden nie gewählt.
 
+Platinenstand V2.0: „schreiben“ beschreibt keinen P4 ab Revision 3.0. Nach Herstellerangabe tragen solche CrowPanel den Platinenstand V2.0 mit anderem Tonweg, den die Firmware noch nicht unterstützt, das Gerät startet unverändert neu. Für eigene Versuche hebt die Umgebungsvariable CROWPANEL_P4V3_ERLAUBEN die Sperre auf.
+
 Gerät: Mit der Umgebungsvariablen CROWPANEL_MAC (zwölf Hexziffern, Doppelpunkte und Bindestriche erlaubt) schreibt „schreiben“ nur auf das CrowPanel mit dieser P4-MAC, ein anderes startet unverändert neu. Ohne Angabe schreibt es auf jedes passende CrowPanel. Ist CROWPANEL_MAC_PFLICHT gesetzt, verlangt „schreiben“ CROWPANEL_MAC und endet ohne sie vor dem ersten Gerätezugriff. Der Upload setzt die Pflicht, wenn die unversionierte platformio_lokal.ini custom_crowpanel_mac_pflicht = ja trägt, so gilt sie nur auf diesem Rechner.
 
 Der Entwicklungsbuild meldet an J16 zusätzlich einen CDC-Kanal (303a:0002, Produkt „RetroRadioCrowPanel10“, Seriennummer = P4-MAC). waehle_usb() findet ihn für die Bildschirmaufnahme, CROWPANEL_USB wählt bei mehreren. Flashen, startlog und mitlesen bleiben an UART0.
@@ -318,6 +320,8 @@ def befehl_schreiben(variante, build, tabelle):
     if revision is None:
         abbruch(port, "Chiprevision nicht gefunden.")
     haupt, neben = revision
+    if haupt >= 3 and not os.environ.get("CROWPANEL_P4V3_ERLAUBEN"):
+        abbruch(port, f"P4 v{haupt}.{neben}: CrowPanel mit einem P4 ab 3.0 tragen nach Herstellerangabe den Platinenstand V2.0 mit anderem Tonweg. Den unterstützt die Firmware noch nicht. Nichts geschrieben.")
     if (variante == "esp32p4_es" and haupt >= 3) or (variante == "esp32p4" and haupt < 3):
         abbruch(port, f"P4 v{haupt}.{neben} passt nicht zur Kernvariante {variante}. Andere Umgebung wählen.")
     build = Path(build)

@@ -4,15 +4,28 @@
 
 Diese Anleitung führt Dich vom fabrikneuen CrowPanel Advanced ESP32-P4 zum gestarteten RetroRadioCrowPanel. Sie gilt gleichermaßen für das 7-, das 9- und das 10.1-Zoll-Modell. Du bereitest das Projekt unter Windows, Linux oder macOS in Visual Studio Code mit PlatformIO vor und überträgst die Firmware über ein USB-C-Kabel. Danach kannst Du denselben Projektordner zum Lesen und Bearbeiten des Quellcodes und für spätere Aktualisierungen verwenden.
 
-**Stand: 14.11.2026.** Der Ablauf wurde unter Linux praktisch bestätigt: Je ein CrowPanel mit 7, 9 und 10,1 Zoll, alle mit Werksfirmware, wurde damit eingerichtet und danach mehrfach aktualisiert. Unter Windows ist der Upload vorbereitet, aber noch nicht an einem Gerät durchgelaufen. Die Schritte für macOS stützen sich auf die offiziellen Software- und Treiberunterlagen, ein eigener Durchlauf steht dort ebenfalls aus. Rückmeldungen dazu helfen.
+**Stand: 26.11.2026.** Der Ablauf wurde unter Linux praktisch bestätigt: Je ein CrowPanel mit 7, 9 und 10,1 Zoll, alle mit Werksfirmware, wurde damit eingerichtet und danach mehrfach aktualisiert. Unter Windows ist der Upload vorbereitet, aber noch nicht an einem Gerät durchgelaufen. Die Schritte für macOS stützen sich auf die offiziellen Software- und Treiberunterlagen, ein eigener Durchlauf steht dort ebenfalls aus. Der Web-Flasher wurde unter Linux in Chrome an zwei Geräten mit 10,1 Zoll geprüft, als Erstinstallation ab Werksfirmware und als Update. Rückmeldungen dazu helfen.
 
 > Die ab Werk installierte Demo von Elecrow wird durch RetroRadioCrowPanel ersetzt, eine Zwischen-Firmware ist nicht erforderlich. Die Werksfirmware gibt es im Repository des Herstellers, siehe [Rückweg zur Werksfirmware](#rückweg-zur-werksfirmware).
 
+## Schnellweg: der Web-Flasher
+
+Wer nur die fertige Firmware aufspielen möchte, braucht weder Visual Studio Code noch PlatformIO. Der [Web-Flasher](https://diylab-de.github.io/RetroRadioCrowPanel/) überträgt das neueste Release direkt aus dem Browser, zur Erstinstallation und für spätere Updates.
+
+1. Die Seite in **Chrome, Edge oder Opera** auf einem Rechner öffnen. Firefox, Safari, Smartphones und Tablets können nicht auf serielle Anschlüsse zugreifen.
+2. Das Datenkabel in die Buchse **UART0** stecken und den Schalter **POWER** einschalten.
+3. **Verbinden** wählen und im Fenster des Browsers den Anschluss auswählen. Er heißt meist „USB Serial“ oder trägt „CH340“ im Namen.
+4. Die Seite zeigt Chip, Revision und MAC-Adresse des gefundenen Geräts. **Installieren** überträgt die Firmware und prüft sie, das dauert rund eine Minute. Danach startet das CrowPanel neu.
+
+Die Seite arbeitet wie der [geprüfte Upload](#6-der-geprüfte-upload): Sie schreibt nur Bootloader, Partitionstabelle und Firmware und vergleicht alles nach dem Schreiben. Einstellungen, PIN, WLAN-Zugangsdaten und Sender bleiben erhalten, die Firmware des WLAN-Chips wird nicht verändert. Erscheint in der Auswahl kein Anschluss, hilft [Kein passender serieller Anschluss erscheint](#kein-passender-serieller-anschluss-erscheint). Weiter geht es mit [Erster Start und Grundeinstellungen](#9-erster-start-und-grundeinstellungen).
+
+Die Abschnitte 1 bis 8 brauchst Du nur, wenn Du die Firmware selbst bauen oder den Quellcode ändern möchtest.
+
 ## 1. Was Du brauchst
 
-- Ein **CrowPanel Advanced ESP32-P4** mit 7, 9 oder 10,1 Zoll. Geprüft ist der Platinenstand V1.2, siehe [Geräte und Anschlüsse](Geräte-und-Anschlüsse.md).
+- Ein **CrowPanel Advanced ESP32-P4** mit 7, 9 oder 10,1 Zoll. Geprüft ist der Platinenstand V1.2, siehe [Geräte und Anschlüsse](Geräte-und-Anschlüsse.md). V1.3 hat laut Hersteller dieselbe Schaltung. Der Platinenstand V2.0 wird noch nicht unterstützt.
 - Ein USB-C-Datenkabel, passend zu Deinem Rechner. Ein reines Ladekabel reicht nicht.
-- Ein USB-Netzteil mit 5 V und mindestens 2 A für den Betrieb, sehr zu empfehlen ist ein [Anker 20 W USB-C-Netzteil](https://www.amazon.de/dp/B0DWK7K4C2). Der USB-Anschluss eines Rechners allein kann zu schwach sein.
+- Für den Betrieb ohne Rechner ein USB-Netzteil mit 5 V und mindestens 2 A, sehr zu empfehlen ist ein [Anker 20 W USB-C-Netzteil](https://www.amazon.de/dp/B0DWK7K4C2). Am USB-Anschluss eines Rechners läuft das CrowPanel meist auch. Ist er zu schwach, bleibt das Bild schwarz oder das Gerät startet von selbst neu.
 - Einen Rechner mit Windows, Linux oder macOS und Internetzugang für den Download der Entwicklungswerkzeuge und Projektabhängigkeiten.
 - Visual Studio Code mit der Erweiterung PlatformIO IDE sowie den vollständigen RetroRadioCrowPanel-Projektordner.
 - Ein WLAN im 2,4-GHz-Band für das Internetradio.
@@ -82,8 +95,8 @@ Es gibt zwei Projektumgebungen. Sie unterscheiden sich nur in den vorkompilierte
 
 | Umgebung | Für | Hinweis |
 | --- | --- | --- |
-| `crowpanel_p4es` | ESP32-P4 Revision 0.x bis 1.x | Voreingestellt. Alle bisher bekannten CrowPanel haben Revision 1.3. |
-| `crowpanel_p4v3` | ESP32-P4 ab Revision 3.0 | Für spätere Geräte. Baut fehlerfrei, ist mangels Gerät aber nicht am CrowPanel geprüft. |
+| `crowpanel_p4es` | ESP32-P4 Revision 0.x bis 1.x | Voreingestellt. Alle bisher geprüften CrowPanel haben Revision 1.3. |
+| `crowpanel_p4v3` | ESP32-P4 ab Revision 3.0 | Baut fehlerfrei, ist mangels Gerät aber nicht am CrowPanel geprüft. Geräte mit diesem Chip tragen nach Herstellerangabe den Platinenstand V2.0, den RetroRadioCrowPanel noch nicht unterstützt. Der Upload schreibt auf sie nichts. |
 
 Du musst die Revision nicht selbst herausfinden: Der Upload liest sie vor dem Schreiben aus und bricht ab, wenn sie nicht zur Umgebung passt, ohne etwas zu verändern.
 
@@ -116,6 +129,7 @@ RetroRadioCrowPanel verwendet nicht den gewöhnlichen Upload von PlatformIO, son
 | Gerät | Was der Upload tut |
 | --- | --- |
 | Revision passt nicht zur Umgebung | Bricht ab, bevor etwas geschrieben wird, und startet das CrowPanel unverändert neu. |
+| ESP32-P4 ab Revision 3.0 | Bricht ebenso ab. Solche Geräte tragen nach Herstellerangabe den Platinenstand V2.0 mit anderem Tonweg, den RetroRadioCrowPanel noch nicht unterstützt. |
 | Revision passt | Schreibt Bootloader, Partitionstabelle und Firmware und prüft alles nach dem Schreiben. |
 
 Der Einstellungsbereich wird dabei nie gelöscht. Einstellungen, PIN, WLAN-Zugangsdaten und Sender bleiben bei jedem Update erhalten. Die Firmware des WLAN-Chips ESP32-C6 im CrowPanel wird in keinem Fall verändert.
@@ -132,7 +146,7 @@ Dieses Terminal verwendet die mit PlatformIO eingerichteten Werkzeuge. Zur Kontr
 
 Der Upload nennt zuerst das Ziel mit seiner MAC-Adresse, prüft die Revision und schreibt dann die Firmware. Das dauert rund eine Minute. Warte auf **SUCCESS** und trenne währenddessen das Kabel nicht. Danach startet das CrowPanel neu und zeigt den Sperrbildschirm von RetroRadioCrowPanel.
 
-Für den Betrieb steckst Du zusätzlich das USB-Netzteil an **USB2.0**. Das Datenkabel an **UART0** darf stecken bleiben, die Eingänge sind auf der Platine getrennt.
+Am USB-Anschluss des Rechners läuft das CrowPanel weiter. Ein USB-Netzteil an **USB2.0** brauchst Du nur, wenn der Rechner zu wenig Strom liefert (das Bild bleibt schwarz oder das Gerät startet von selbst neu) oder wenn das Radio ohne Rechner laufen soll. Datenkabel und Netzteil dürfen gleichzeitig stecken, die Eingänge sind auf der Platine getrennt.
 
 ### Rückweg zur Werksfirmware
 
@@ -140,7 +154,7 @@ RetroRadioCrowPanel sichert die Werksfirmware nicht. Elecrow stellt sie im jewei
 
 ## 8. Spätere Updates
 
-Für jedes weitere Update reicht derselbe Weg:
+Am einfachsten geht ein Update mit dem [Web-Flasher](#schnellweg-der-web-flasher), er bietet immer das neueste Release an. Wer selbst baut, nimmt denselben Weg wie bei der Erstinstallation:
 
 1. Neuen Quellstand holen: im geklonten Projekt mit **Git: Pull**, sonst die neue ZIP-Datei entpacken.
 2. In **Project Tasks > crowpanel_p4es > General > Upload** starten oder im Terminal `pio run -e crowpanel_p4es -t upload` eingeben.
@@ -211,7 +225,8 @@ Bei `Permission denied` richte die [PlatformIO-Geräteberechtigungen unter Linux
 | --- | --- |
 | **Kein CH340 gefunden** | Kabel, Buchse **UART0**, Schalter **POWER** und Treiber prüfen, siehe oben. |
 | **Mehrere CH340 gefunden** | Wähle den Anschluss mit `--upload-port` oder **Set Project Port**. |
-| **P4 v… passt nicht zur Kernvariante …** | Die Umgebung passt nicht zur Chiprevision. Bei Revision 3.x die Umgebung `crowpanel_p4v3` wählen. Es wurde nichts geschrieben. |
+| **P4 v… passt nicht zur Kernvariante …** | Die Umgebung passt nicht zur Chiprevision. Für die bisher geprüften CrowPanel gilt `crowpanel_p4es`. Es wurde nichts geschrieben. |
+| **P4 v3… Platinenstand V2.0 …** | Das CrowPanel hat einen ESP32-P4 ab Revision 3.0 und damit nach Herstellerangabe den Platinenstand V2.0 mit anderem Tonweg. RetroRadioCrowPanel unterstützt ihn noch nicht. Es wurde nichts geschrieben. |
 
 ### Der Upload bleibt bei der Verbindungsaufnahme hängen
 
@@ -248,5 +263,7 @@ Der geprüfte Upload ist in `scripts/crowpanel_upload.py` und `scripts/crowpanel
 Mit mehreren CrowPanel am selben Rechner nennt die Umgebungsvariable `CROWPANEL_MAC` das gemeinte Gerät mit seiner MAC-Adresse aus der Zeile „Ziel:“ des Uploads, zwölf Hexziffern mit oder ohne Doppelpunkte. Trägt das angeschlossene Gerät eine andere MAC, bricht der Upload vor dem Schreiben ab.
 
 Die Erstinstallation wurde unter Linux an je einem CrowPanel mit 7, 9 und 10,1 Zoll mit Werksfirmware geprüft, alle mit Platinenstand V1.2 und ESP32-P4 Revision 1.3. Updates liefen dort vielfach. Unter Windows sind die Werkzeuge vorbereitet, ein Durchlauf am Gerät steht aus, ebenso unter macOS.
+
+Der Web-Flasher liegt als Quelle unter `webflasher/`. Er spricht über die Web-Serial-Schnittstelle des Browsers und die Bibliothek esptool-js von Espressif mit dem CrowPanel, wählt die Firmware nach der Chiprevision, prüft die geladenen Dateien per SHA-256 und vergleicht nach dem Schreiben die Prüfsummen im Flash. Die Seite lädt nur eigene Dateien und sendet keine Daten. Geprüft wurde er unter Linux in Chrome an zwei Geräten mit 10,1 Zoll, Platinenstand V1.2 und ESP32-P4 Revision 1.3.
 
 [RetroRadioCrowPanel](../README.md) > [Dokumentation](../README.md#dokumentation) > RetroRadioCrowPanel: Erste Inbetriebnahme

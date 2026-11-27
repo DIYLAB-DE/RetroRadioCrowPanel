@@ -20,7 +20,7 @@ RetroRadioCrowPanel ist eine Portierung von [RetroRadio](https://github.com/DIYL
 
 | Thema | Anleitung |
 | --- | --- |
-| Installieren | [Windows, Linux und macOS mit VS Code/PlatformIO](docs/RetroRadioCrowPanel-Ersteinrichtung.md), [PDF herunterladen](docs/RetroRadioCrowPanel-Ersteinrichtung.pdf) |
+| Installieren | [Fertige Firmware im Browser aufspielen (Web-Flasher)](https://diylab-de.github.io/RetroRadioCrowPanel/), oder selbst bauen: [Windows, Linux und macOS mit VS Code/PlatformIO](docs/RetroRadioCrowPanel-Ersteinrichtung.md), [PDF herunterladen](docs/RetroRadioCrowPanel-Ersteinrichtung.pdf) |
 | Benutzen | [Gerätebedienung](docs/Bedienung.md), [Radio und SD-Player](docs/Radio-und-Musik.md), [Weboberfläche und FTP](docs/Weboberfläche.md) |
 | Hardware | [Die drei Displays, Anschlüsse der Rückseite, Akku, Lautsprecher und Uhr](docs/Geräte-und-Anschlüsse.md) |
 | Fehler finden | [Fehlerhilfe](docs/Fehlerhilfe.md) |
@@ -75,7 +75,7 @@ Drei Themen stehen zur Wahl: **Retro** mit den Farben des Originals, **E-Paper**
 
 ## Hardware
 
-Gebraucht wird ein **CrowPanel Advanced ESP32-P4** mit 7, 9 oder 10,1 Zoll, dazu ein USB-C-Datenkabel und ein USB-Netzteil mit 5 V und 2 A. Alles Weitere ist an Bord.
+Gebraucht wird ein **CrowPanel Advanced ESP32-P4** mit 7, 9 oder 10,1 Zoll, dazu ein USB-C-Datenkabel und ein USB-Netzteil mit 5 V und 2 A. Alles Weitere ist an Bord. Der Platinenstand V2.0 (Aufdruck auf der Platine) hat einen anderen Tonweg und wird noch nicht unterstützt, siehe [Beschaffung](#beschaffung).
 
 <img src="docs/bilder/gerät/crowpanel-rueckseite.svg" alt="Skizze der Rückseite mit allen Anschlüssen" width="800">
 
@@ -103,7 +103,7 @@ Direkt bei Elecrow gibt es alle drei Größen ebenfalls, die Links stehen im [Ve
 
 **Das Netzteil ist sehr zu empfehlen:** günstig, kräftig und von einem Markenhersteller. Daran laufen alle drei Displays mit 5 V einwandfrei. Im Doppelpack reicht es für zwei Geräte.
 
-Händler nennen meist weder den Platinenstand noch die Chiprevision des ESP32-P4. Geprüft ist RetroRadioCrowPanel mit Platinenstand V1.2 und Revision 1.3. Ein Gerät mit Revision 3.0 oder neuer braucht die Umgebung `crowpanel_p4v3`, der Upload erkennt das selbst.
+Händler nennen meist weder den Platinenstand noch die Chiprevision des ESP32-P4. Geprüft ist RetroRadioCrowPanel mit Platinenstand V1.2 und Revision 1.3. V1.3 hat laut Hersteller dieselbe Schaltung mit einem zusätzlichen Aufdruck. Seit November 2026 führt der Hersteller den Platinenstand V2.0 mit einem ESP32-P4 Revision 3.2 und einem Codec ES8311 statt der beiden Verstärker. Dafür ist die Firmware noch nicht gemacht. Web-Flasher und Upload erkennen solche Geräte am Chip und schreiben nichts auf sie.
 
 ### Ausblick
 

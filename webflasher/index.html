@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Die Seite lädt nur eigene Dateien: Skripte, Firmwareliste und Firmware liegen im selben Ordner, nichts kommt von fremden Servern. -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:">
+  <meta name="referrer" content="no-referrer">
+  <title>RetroRadioCrowPanel installieren</title>
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📻</text></svg>">
+
+  <style>
+    /* Farben und Schriftfolge der Weboberfläche des Radios (Thema Ozeanblau). */
+    :root {
+      --primary-color: #afd3e2;
+      --navbar-color: #146c94;
+      --section-color: #f6f1f1;
+      --text-color: #333;
+      --accent-color: #4caf50;
+      --danger-color: #f44336;
+      --card-bg: #fff;
+      --border-color: #ddd;
+      --headline-light: #fff;
+    }
+
+    *,
+    *::after,
+    *::before {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--section-color);
+      color: var(--text-color);
+      font-family: Verdana, Roboto, "Helvetica Neue", sans-serif;
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+    header {
+      background: var(--navbar-color);
+      color: var(--headline-light);
+    }
+
+    .rahmen {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    header .rahmen {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      padding-top: 24px;
+      padding-bottom: 24px;
+    }
+
+    /* In schmalen Fenstern steht die Sprachtaste über dem Titel, statt aus dem Bild zu rutschen. */
+    @media (max-width: 560px) {
+      header .rahmen {
+        flex-direction: column-reverse;
+      }
+
+      #sprache {
+        align-self: flex-end;
+      }
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 28px;
+      line-height: 1.2;
+      overflow-wrap: anywhere;
+    }
+
+    header p {
+      margin: 0;
+      max-width: 56ch;
+    }
+
+    h2 {
+      margin: 0 0 12px;
+      font-size: 20px;
+      line-height: 1.3;
+    }
+
+    main {
+      padding-top: 24px;
+      padding-bottom: 8px;
+    }
+
+    .karte {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .karte p {
+      margin: 0 0 12px;
+    }
+
+    .karte p:last-child,
+    .karte ol:last-child,
+    .karte ul:last-child {
+      margin-bottom: 0;
+    }
+
+    ol,
+    ul {
+      margin: 0 0 12px;
+      padding-left: 24px;
+    }
+
+    li {
+      margin-bottom: 8px;
+    }
+
+    .hinweis {
+      border-left: 4px solid var(--primary-color);
+      padding-left: 12px;
+    }
+
+    .fehler {
+      color: var(--danger-color);
+    }
+
+    #firmware {
+      font-weight: bold;
+    }
+
+    button {
+      font: inherit;
+      border: 0;
+      border-radius: 8px;
+      padding: 10px 22px;
+      background: var(--navbar-color);
+      color: var(--headline-light);
+      cursor: pointer;
+    }
+
+    button:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    button:focus-visible,
+    a:focus-visible,
+    summary:focus-visible,
+    input:focus-visible {
+      outline: 3px solid var(--primary-color);
+      outline-offset: 2px;
+    }
+
+    button.haupt {
+      background: var(--accent-color);
+      font-weight: bold;
+    }
+
+    button.neben {
+      background: transparent;
+      color: var(--navbar-color);
+      border: 1px solid var(--navbar-color);
+    }
+
+    #sprache {
+      flex: none;
+      background: transparent;
+      border: 1px solid var(--headline-light);
+      padding: 6px 14px;
+    }
+
+    .knoepfe {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    label.option {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      margin-top: 16px;
+      font-size: 14px;
+    }
+
+    label.option input {
+      margin-top: 4px;
+    }
+
+    dl {
+      display: grid;
+      grid-template-columns: max-content 1fr;
+      gap: 6px 16px;
+      margin: 0 0 12px;
+    }
+
+    dt {
+      font-weight: bold;
+    }
+
+    dd {
+      margin: 0;
+      overflow-wrap: anywhere;
+    }
+
+    progress {
+      width: 100%;
+      height: 18px;
+      accent-color: var(--navbar-color);
+    }
+
+    #warnung {
+      font-weight: bold;
+    }
+
+    details summary {
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    #protokoll {
+      margin: 12px 0 0;
+      max-height: 260px;
+      overflow: auto;
+      padding: 10px;
+      background: var(--section-color);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 13px;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    footer {
+      padding-bottom: 32px;
+      font-size: 14px;
+    }
+
+    footer nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 20px;
+      margin-bottom: 8px;
+    }
+
+    a {
+      color: var(--navbar-color);
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="rahmen">
+      <div>
+        <h1>RetroRadioCrowPanel</h1>
+        <p data-i18n="kopf.untertitel"></p>
+      </div>
+      <button id="sprache" type="button" data-i18n="sprache.knopf" data-i18n-title="sprache.titel"></button>
+    </div>
+  </header>
+
+  <main class="rahmen">
+    <noscript>
+      <p class="karte">Diese Seite braucht JavaScript. This page needs JavaScript.</p>
+    </noscript>
+
+    <section class="karte">
+      <h2 data-i18n="schritte.titel"></h2>
+      <ol>
+        <li data-i18n="schritte.1"></li>
+        <li data-i18n="schritte.2"></li>
+        <li data-i18n="schritte.3"></li>
+      </ol>
+      <p class="hinweis" data-i18n="schritte.erhalten"></p>
+    </section>
+
+    <section class="karte" aria-live="polite">
+      <div id="ansichtStart">
+        <p id="firmware"></p>
+        <p id="browserFehlt" class="fehler" data-i18n="browser.fehlt" hidden></p>
+        <div class="knoepfe">
+          <button id="verbinden" type="button" class="haupt" data-i18n="knopf.verbinden" disabled></button>
+        </div>
+        <label class="option">
+          <input id="langsam" type="checkbox">
+          <span data-i18n="option.langsam"></span>
+        </label>
+      </div>
+
+      <div id="ansichtBeschaeftigt" hidden>
+        <p id="status"></p>
+        <progress id="balken" max="1"></progress>
+        <p id="warnung" data-i18n="status.warnung" hidden></p>
+      </div>
+
+      <div id="ansichtZiel" hidden>
+        <h2 data-i18n="ziel.titel"></h2>
+        <dl>
+          <dt data-i18n="ziel.chip"></dt>
+          <dd id="zielChip"></dd>
+          <dt data-i18n="ziel.mac"></dt>
+          <dd id="zielMac"></dd>
+          <dt data-i18n="ziel.firmware"></dt>
+          <dd id="zielFirmware"></dd>
+        </dl>
+        <p class="hinweis" data-i18n="ziel.hinweis"></p>
+        <div class="knoepfe">
+          <button id="installieren" type="button" class="haupt" data-i18n="knopf.installieren"></button>
+          <button id="abbrechen" type="button" class="neben" data-i18n="knopf.abbrechen"></button>
+        </div>
+      </div>
+
+      <div id="ansichtFertig" hidden>
+        <h2 data-i18n="fertig.titel"></h2>
+        <p id="fertigText"></p>
+        <p data-i18n="fertig.betrieb"></p>
+        <div class="knoepfe">
+          <button id="weiteres" type="button" class="neben" data-i18n="knopf.weiteres"></button>
+        </div>
+      </div>
+
+      <div id="ansichtFehler" hidden>
+        <h2 class="fehler" data-i18n="fehler.titel"></h2>
+        <p id="fehlerText"></p>
+        <div class="knoepfe">
+          <button id="nochmal" type="button" data-i18n="knopf.nochmal"></button>
+        </div>
+      </div>
+    </section>
+
+    <section class="karte">
+      <h2 data-i18n="hilfe.titel"></h2>
+      <ul>
+        <li data-i18n="hilfe.anschluss"></li>
+        <li data-i18n="hilfe.boot"></li>
+        <li data-i18n="hilfe.dunkel"></li>
+        <li data-i18n="hilfe.v2"></li>
+      </ul>
+      <p>
+        <span data-i18n="hilfe.mehr"></span>
+        <a href="https://github.com/DIYLAB-DE/RetroRadioCrowPanel/blob/master/docs/Fehlerhilfe.md" data-i18n="hilfe.fehlerhilfe"></a>.
+      </p>
+      <details>
+        <summary data-i18n="protokoll.titel"></summary>
+        <pre id="protokoll"></pre>
+      </details>
+    </section>
+  </main>
+
+  <footer class="rahmen">
+    <nav>
+      <a href="https://github.com/DIYLAB-DE/RetroRadioCrowPanel" data-i18n="fuss.projekt"></a>
+      <a id="linkQuelle" href="https://github.com/DIYLAB-DE/RetroRadioCrowPanel" data-i18n="fuss.quelle"></a>
+      <a href="https://github.com/DIYLAB-DE/RetroRadioCrowPanel/blob/master/docs/LIZENZEN.md" data-i18n="fuss.lizenzen"></a>
+    </nav>
+    <p data-i18n="fuss.text"></p>
+  </footer>
+
+  <script type="module" src="start.js"></script>
+</body>
+
+</html>

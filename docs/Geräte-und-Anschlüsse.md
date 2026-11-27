@@ -17,7 +17,7 @@ RetroRadioCrowPanel läuft auf dem **Elecrow CrowPanel Advanced ESP32-P4** mit 7
 
 Gemeinsam haben alle drei: ESP32-P4 mit 32 MB PSRAM und 16 MB Flash, WLAN über einen ESP32-C6 (Wi-Fi 6, 2,4 GHz), Displaytreiber EK79007, kapazitiver Touch mit fünf Punkten (GT911), 400 cd/m² und 178° Blickwinkel, zwei digitale Verstärker, microSD-Kartenleser und Ladeschaltung für einen Akku. Das Gehäuse hat ringsum Befestigungslöcher für M3.
 
-**Geprüft mit RetroRadioCrowPanel:** je ein Gerät jeder Größe mit Platinenstand V1.2 und ESP32-P4 Revision 1.3. Bild, Touch, Drehung, WLAN, Radio mit Ton, Uhr mit DS1307 und SD-Player laufen auf allen drei. Den Platinenstand trägt die Platine als Aufdruck. Ältere Stände (V1.0, V1.1) sind nicht geprüft.
+**Geprüft mit RetroRadioCrowPanel:** je ein Gerät jeder Größe mit Platinenstand V1.2 und ESP32-P4 Revision 1.3. Bild, Touch, Drehung, WLAN, Radio mit Ton, Uhr mit DS1307 und SD-Player laufen auf allen drei. Den Platinenstand trägt die Platine als Aufdruck. Ältere Stände (V1.0, V1.1) sind nicht geprüft. V1.3 hat laut Hersteller dieselbe Schaltung wie V1.2. Der Platinenstand V2.0 (ESP32-P4 Revision 3.2, Codec ES8311 statt der beiden Verstärker) wird noch nicht unterstützt.
 
 ## Die Rückseite
 
@@ -48,7 +48,7 @@ Kamera und Mikrofon sind auf der Platine vorgesehen, RetroRadioCrowPanel nutzt s
 Laut Hersteller braucht das CrowPanel 5 V und bis zu 2 A, mit Bild 8 bis 10 W. Der USB-Anschluss eines Rechners allein kann dafür zu schwach sein, dann bleibt das Bild schwarz oder das Gerät startet neu. So geht es sicher:
 
 - **Zum Übertragen der Firmware** steckt das Datenkabel vom Rechner an **UART0**.
-- **Im Betrieb** versorgt ein USB-Netzteil mit 5 V und mindestens 2 A das Gerät an **USB2.0** oder **UART0**. Wahlweise kommen 5 V an **UART3-IN**.
+- **Im Betrieb** versorgt ein USB-Netzteil mit 5 V und mindestens 2 A das Gerät an **USB2.0** oder **UART0**, meist reicht auch der USB-Anschluss eines Rechners. Wahlweise kommen 5 V an **UART3-IN**.
 
 Sehr zu empfehlen ist das [Anker 20 W USB-C-Netzteil mit Power Delivery](https://www.amazon.de/dp/B0DWK7K4C2) im Doppelpack mit USB-C-Kabel: günstig, kräftig und von einem Markenhersteller. Daran laufen alle drei Displays mit 5 V einwandfrei. Weitere Bezugsquellen stehen unter [Beschaffung](../README.md#beschaffung).
 
