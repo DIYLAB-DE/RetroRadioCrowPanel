@@ -1,7 +1,7 @@
 /** Zugriff auf das CrowPanel über Web Serial und esptool-js. Nur diese Datei kennt die Bibliothek, die Seite arbeitet mit dem Objekt aus verbindeGeraet(). */
 
 import { ESPLoader, Transport } from "./esptool-js/bundle.js";
-import { CH340_KENNUNGEN, CHIP_NAME, FlasherFehler, istCrowPanelAnschluss } from "./kern.js";
+import { CH340_KENNUNGEN, CHIP_NAME, FlasherFehler, istCrowPanelAnschluss, pruefeBrowser } from "./kern.js";
 
 const ROM_BAUD = 115200; // Geschwindigkeit des ROM-Bootloaders vor dem Wechsel
 const RESET_MS = 100; // Dauer des Resetpulses über RTS
@@ -10,9 +10,18 @@ function warte(ms) {
   return new Promise((weiter) => setTimeout(weiter, ms));
 }
 
-/** Ob der Browser Web Serial anbietet (Chrome, Edge und Opera am Rechner, nur über https oder localhost). */
-export function serialVerfuegbar() {
-  return typeof navigator !== "undefined" && "serial" in navigator;
+/**
+ * Liest die Merkmale des Browsers und gibt den Textschlüssel des Hinweises zurück, null für einen freigegebenen Browser. Web Serial gibt es nur über https oder localhost. Die Markennamen nennen nur Browser auf Chromium-Grundlage, Firefox nennt seine Version in der Kennung.
+ */
+export function browserHinweis() {
+  const daten = navigator.userAgentData;
+  const firefox = /Firefox\/(\d+)/.exec(navigator.userAgent);
+  return pruefeBrowser({
+    firefox: firefox ? Number(firefox[1]) : null,
+    serial: "serial" in navigator,
+    marken: daten?.brands?.map((marke) => marke.brand) ?? null,
+    mobil: daten?.mobile ?? /Android|iPhone|iPad|iPod/i.test(navigator.userAgent),
+  });
 }
 
 /**

@@ -37,6 +37,21 @@ function pfadErlaubt(pfad) {
   return typeof pfad === "string" && pfad.length > 0 && !/^[\/\\]|[:\\]|(^|\/)\.\.(\/|$)/.test(pfad);
 }
 
+export const FIREFOX_AB = 160; // älteste am Gerät geprüfte Firefox-Version
+
+/**
+ * Ob der Browser für den Web-Flasher freigegeben ist. Am Gerät geprüft sind Chrome und Firefox am Rechner. Freigegeben sind Browser auf Chromium-Grundlage (Chrome, Edge, Opera) und Firefox ab FIREFOX_AB. Andere Browser und ältere Firefox-Versionen bleiben gesperrt, auch wenn sie Web Serial anbieten, ebenso Smartphones und Tablets: Mit ihnen ist der Ablauf nicht geprüft.
+ * @param {{serial: boolean, marken: string[] | null, mobil: boolean, firefox: number | null}} merkmale Web Serial vorhanden, Markennamen aus navigator.userAgentData (null, wenn der Browser sie nicht nennt), mobiles Gerät, Hauptversion von Firefox (null in anderen Browsern)
+ * @returns {string | null} Textschlüssel des Hinweises, null für einen freigegebenen Browser
+ */
+export function pruefeBrowser({ serial, marken, mobil, firefox }) {
+  if (!serial) return "browser.fehlt";
+  if (mobil) return "browser.ungeprueft";
+  if (marken?.includes("Chromium")) return null;
+  if (typeof firefox === "number" && firefox >= FIREFOX_AB) return null;
+  return "browser.ungeprueft";
+}
+
 /**
  * Ob ein gewählter Anschluss der USB-Seriell-Wandler eines CrowPanel sein kann. Alles andere wird nicht geöffnet: Espressif-Boards mit USB-Serial-JTAG (303a:1001), andere Wandler und Anschlüsse ohne USB-Kennung.
  * @param {{usbVendorId?: number, usbProductId?: number} | null | undefined} info Rückgabe von SerialPort.getInfo()

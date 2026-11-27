@@ -4,7 +4,7 @@
 
 Diese Anleitung führt Dich vom fabrikneuen CrowPanel Advanced ESP32-P4 zum gestarteten RetroRadioCrowPanel. Sie gilt gleichermaßen für das 7-, das 9- und das 10.1-Zoll-Modell. Du bereitest das Projekt unter Windows, Linux oder macOS in Visual Studio Code mit PlatformIO vor und überträgst die Firmware über ein USB-C-Kabel. Danach kannst Du denselben Projektordner zum Lesen und Bearbeiten des Quellcodes und für spätere Aktualisierungen verwenden.
 
-**Stand: 26.11.2026.** Der Ablauf wurde unter Linux praktisch bestätigt: Je ein CrowPanel mit 7, 9 und 10,1 Zoll, alle mit Werksfirmware, wurde damit eingerichtet und danach mehrfach aktualisiert. Unter Windows ist der Upload vorbereitet, aber noch nicht an einem Gerät durchgelaufen. Die Schritte für macOS stützen sich auf die offiziellen Software- und Treiberunterlagen, ein eigener Durchlauf steht dort ebenfalls aus. Der Web-Flasher wurde unter Linux in Chrome an zwei Geräten mit 10,1 Zoll geprüft, als Erstinstallation ab Werksfirmware und als Update. Rückmeldungen dazu helfen.
+**Stand: 27.11.2026.** Der Ablauf wurde unter Linux praktisch bestätigt: Je ein CrowPanel mit 7, 9 und 10,1 Zoll, alle mit Werksfirmware, wurde damit eingerichtet und danach mehrfach aktualisiert. Unter Windows ist der Upload vorbereitet, aber noch nicht an einem Gerät durchgelaufen. Die Schritte für macOS stützen sich auf die offiziellen Software- und Treiberunterlagen, ein eigener Durchlauf steht dort ebenfalls aus. Der Web-Flasher wurde unter Linux in Chrome an zwei Geräten mit 10,1 Zoll geprüft, als Erstinstallation ab Werksfirmware und als Update, dazu in Firefox 160 als Update. Rückmeldungen dazu helfen.
 
 > Die ab Werk installierte Demo von Elecrow wird durch RetroRadioCrowPanel ersetzt, eine Zwischen-Firmware ist nicht erforderlich. Die Werksfirmware gibt es im Repository des Herstellers, siehe [Rückweg zur Werksfirmware](#rückweg-zur-werksfirmware).
 
@@ -12,7 +12,7 @@ Diese Anleitung führt Dich vom fabrikneuen CrowPanel Advanced ESP32-P4 zum gest
 
 Wer nur die fertige Firmware aufspielen möchte, braucht weder Visual Studio Code noch PlatformIO. Der [Web-Flasher](https://diylab-de.github.io/RetroRadioCrowPanel/) überträgt das neueste Release direkt aus dem Browser, zur Erstinstallation und für spätere Updates.
 
-1. Die Seite in **Chrome, Edge oder Opera** auf einem Rechner öffnen. Firefox, Safari, Smartphones und Tablets können nicht auf serielle Anschlüsse zugreifen.
+1. Die Seite in **Chrome, Edge, Opera oder Firefox ab Version 160** auf einem Rechner öffnen, am Gerät geprüft sind Chrome und Firefox. Andere Browser, ältere Firefox-Versionen, Smartphones und Tablets erkennt die Seite und sperrt dort die Taste **Verbinden**, weil sie nicht auf serielle Anschlüsse zugreifen können oder mit dem Web-Flasher nicht geprüft sind.
 2. Das Datenkabel in die Buchse **UART0** stecken und den Schalter **POWER** einschalten.
 3. **Verbinden** wählen und im Fenster des Browsers den Anschluss auswählen. Er heißt meist „USB Serial“ oder trägt „CH340“ im Namen.
 4. Die Seite zeigt Chip, Revision und MAC-Adresse des gefundenen Geräts. **Installieren** überträgt die Firmware und prüft sie, das dauert rund eine Minute. Danach startet das CrowPanel neu.
@@ -264,6 +264,6 @@ Mit mehreren CrowPanel am selben Rechner nennt die Umgebungsvariable `CROWPANEL_
 
 Die Erstinstallation wurde unter Linux an je einem CrowPanel mit 7, 9 und 10,1 Zoll mit Werksfirmware geprüft, alle mit Platinenstand V1.2 und ESP32-P4 Revision 1.3. Updates liefen dort vielfach. Unter Windows sind die Werkzeuge vorbereitet, ein Durchlauf am Gerät steht aus, ebenso unter macOS.
 
-Der Web-Flasher liegt als Quelle unter `webflasher/`. Er spricht über die Web-Serial-Schnittstelle des Browsers und die Bibliothek esptool-js von Espressif mit dem CrowPanel, wählt die Firmware nach der Chiprevision, prüft die geladenen Dateien per SHA-256 und vergleicht nach dem Schreiben die Prüfsummen im Flash. Die Seite lädt nur eigene Dateien und sendet keine Daten. Geprüft wurde er unter Linux in Chrome an zwei Geräten mit 10,1 Zoll, Platinenstand V1.2 und ESP32-P4 Revision 1.3.
+Der Web-Flasher liegt als Quelle unter `webflasher/`. Er spricht über die Web-Serial-Schnittstelle des Browsers und die Bibliothek esptool-js von Espressif mit dem CrowPanel, wählt die Firmware nach der Chiprevision, prüft die geladenen Dateien per SHA-256 und vergleicht nach dem Schreiben die Prüfsummen im Flash. Die Seite lädt nur eigene Dateien und sendet keine Daten. Geprüft wurde er unter Linux in Chrome an zwei Geräten mit 10,1 Zoll, Platinenstand V1.2 und ESP32-P4 Revision 1.3, und in Firefox 160 an einem davon.
 
 [RetroRadioCrowPanel](../README.md) > [Dokumentation](../README.md#dokumentation) > RetroRadioCrowPanel: Erste Inbetriebnahme
