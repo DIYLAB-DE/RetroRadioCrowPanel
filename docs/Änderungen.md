@@ -4,13 +4,42 @@
 
 Hier steht, was sich von Version zu Version ändert, die neueste Version steht oben. Jede Version erscheint als [Release auf GitHub](https://github.com/DIYLAB-DE/RetroRadioCrowPanel/releases) mit eigener Nummer. Die Nummer zeigt das CrowPanel unter Einstellungen -> Info & Neustart und die Weboberfläche im Abschnitt System. Sie ändert sich nur mit einem neuen Release, auch wenn Du die Firmware selbst baust.
 
-## Nachtrag vom 27.11.2026
+## v26.11.27 vom 27.11.2026
 
-Ohne neue Firmware, die Version bleibt v26.11.14. Wer sie schon aufgespielt hat, muss nichts tun.
+Die zweite Version von RetroRadioCrowPanel, [v26.11.27 auf GitHub](https://github.com/DIYLAB-DE/RetroRadioCrowPanel/releases/tag/v26.11.27). Einstellungen und Sender bleiben beim Update erhalten.
 
-- **Web-Flasher:** Die fertige Firmware lässt sich jetzt unter [diylab-de.github.io/RetroRadioCrowPanel](https://diylab-de.github.io/RetroRadioCrowPanel/) direkt aus Chrome, Edge, Opera oder Firefox ab Version 160 aufspielen, zur Erstinstallation und für Updates, siehe [Schnellweg: der Web-Flasher](RetroRadioCrowPanel-Ersteinrichtung.md#schnellweg-der-web-flasher). Die Quelle der Seite liegt unter `webflasher/`. Geprüft unter Linux in Chrome an zwei Geräten mit 10,1 Zoll, als Erstinstallation ab Werksfirmware und als Update, dazu in Firefox 160 als Update. Andere Browser, Smartphones und Tablets sperrt die Seite.
-- **Platinenstand V2.0:** Der Hersteller führt seit November 2026 einen Platinenstand V2.0 mit ESP32-P4 Revision 3.2 und anderem Tonweg. RetroRadioCrowPanel unterstützt ihn noch nicht. Web-Flasher und Upload erkennen solche Geräte am Chip und schreiben nichts auf sie.
+### Neu
+
+- **Web-Flasher:** Die fertige Firmware lässt sich unter [diylab-de.github.io/RetroRadioCrowPanel](https://diylab-de.github.io/RetroRadioCrowPanel/) direkt aus Chrome, Edge, Opera oder Firefox ab Version 160 aufspielen, zur Erstinstallation und für Updates, siehe [Schnellweg: der Web-Flasher](RetroRadioCrowPanel-Ersteinrichtung.md#schnellweg-der-web-flasher). Die Quelle der Seite liegt unter `webflasher/`. Andere Browser, Smartphones und Tablets sperrt die Seite.
+- **Serielles Log, WLAN:** Nach jeder WLAN-Verbindung nennt die Zeile `WLAN_FUNK` den Energiesparmodus und den ausgehandelten Funkstandard (`HT20` und `HT40` sind Wi-Fi 4, `HE20` ist Wi-Fi 6). Das hilft bei der Fehlersuche im WLAN. Die Ausgabe schaltest Du in den Einstellungen unter Serielle Logs ein.
+- **Serielles Log, Radio:** Das Log nennt die Meldungen `slow stream` und `Stream lost`, wenn ein Sender zu langsam liefert oder die Verbindung abreißt.
+
+### Geändert
+
+- **Haus-Taste:** Ein kurzer Tipp auf das Haus unten rechts beendet in Radio und SD-Player die Wiedergabe sofort und führt direkt ins Hauptmenü. Den Sleep-Timer öffnest Du, indem Du das Haus mindestens 0,8 Sekunden gedrückt hältst, siehe [Favoriten und Sleep-Timer](Radio-und-Musik.md#favoriten-und-sleep-timer).
+- **Lautstärke nach dem Neustart:** Die gesicherte Lautstärke gilt nach einem Neustart auch ohne die optionale Uhr DS1307. Bisher begann ein CrowPanel ohne Uhr jeden Start mit höchstens Lautstärke 10.
+- **Zurücksetzen:** **zurücksetzen** am Gerät und **Werkseinstellungen** in der Weboberfläche löschen jetzt auch die gesicherten Radiowerte (Lautstärke, Klangregler, Senderwahl und Visualisierung), die eigenen Farben des Themas Individuell und das FTP-Passwort. Die Senderliste bleibt erhalten.
+- **WLAN-Profile speichern:** Nach dem Speichern eines WLAN-Profils bietet das CrowPanel nur noch dann einen Neustart an, wenn schon eine WLAN-Verbindung besteht. Ohne Verbindung verbindet es sofort und meldet nur das Speichern.
+- **WLAN-Energiesparmodus:** Das CrowPanel schaltet den Energiesparmodus seines WLAN-Chips ab. An Routern mit Wi-Fi 6 im 2,4-GHz-Band kann der Ton im Radio mit Energiesparmodus immer wieder für einige Sekunden aussetzen. An Deinem Router musst Du nichts ändern.
+- **Audio-Bibliothek:** RetroRadioCrowPanel verwendet jetzt die eigenständige Bibliothek [audio-lite](https://github.com/DIYLAB-DE/audio-lite) in Version 0.2.0 statt einer Kopie im Projekt. PlatformIO lädt sie beim ersten Build von selbst, wie M5GFX. Am Build ändert sich für Dich nichts, der Ordner `lib/audio-lite` entfällt. Laut ihren Release-Notes kommen Korrekturen beim Spulen in FLAC-Dateien und beim Einlesen von M4A-Dateien hinzu.
+- **Einstellungen:** Die Trennlinien unter dem letzten Menüeintrag und unter der Zeile I2C auf der Seite Info & Neustart entfallen, sie trennten nichts.
 - **Netzteil:** Die Anleitungen empfehlen ein Netzteil nur noch, wenn der Rechner zu wenig Strom liefert oder das Radio ohne Rechner laufen soll. Alle geprüften Geräte liefen auch am USB-Anschluss eines Rechners.
+
+### Behoben
+
+- **Neustart:** Nach einem Neustart über die Weboberfläche oder am Gerät kam das CrowPanel in seltenen Fällen nicht mehr ins WLAN, fand die SD-Karte nicht und startete rund alle 20 Sekunden von selbst neu. Ursache war die Reihenfolge, in der der Software-Neustart die Bausteine des Prozessors zurücksetzt. Sie ist berichtigt.
+- **WLAN-Profil:** Ein WLAN-Profil, das Du in den Einstellungen wieder einschaltest, verbindet jetzt sofort. Bisher brauchte es dafür einen Neustart, wenn vorher kein Profil eingeschaltet war.
+- **Weboberfläche nach einem Neustart:** Nach **Speichern & neu starten**, **Neu starten** oder dem Speichern eines Themas zeigte der Browser manchmal eine Fehlerseite, weil die Weboberfläche zu früh neu lud. Sie wartet jetzt, bis das CrowPanel wieder antwortet. Die Meldung „Zugriff verweigert“ direkt nach dem Start tritt nicht mehr auf.
+- **FTP:** Nach einer Übertragung von mehr als fünf Minuten trennte das CrowPanel die Verbindung beim nächsten Befehl. Die Verbindung bleibt jetzt bestehen.
+
+### Bekannt und offen
+
+- **Platinenstand V2.0:** Der Hersteller führt seit November 2026 einen Platinenstand V2.0 mit ESP32-P4 Revision 3.2 und anderem Tonweg. RetroRadioCrowPanel unterstützt ihn noch nicht. Web-Flasher und Upload erkennen solche Geräte am Chip und schreiben nichts auf sie.
+- Das erweiterte Zurücksetzen ist am Gerät noch nicht geprüft.
+- Der Betrieb an einem Router mit Wi-Fi 6 ist am CrowPanel nicht geprüft.
+- Der Betrieb mit Akku ist nicht geprüft, eine Ladeanzeige gibt es nicht.
+- Die Erstinstallation mit VS Code und PlatformIO wurde unter Linux geprüft. Unter Windows ist der Upload vorbereitet, aber noch nicht an einem Gerät durchgelaufen, unter macOS ebenso.
+- Der Bluetooth-Sender mit UKW-Modulator und optischem Ausgang ist geplant, aber noch nicht Teil dieser Version.
 
 ## v26.11.14 vom 14.11.2026
 

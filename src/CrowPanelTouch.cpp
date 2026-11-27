@@ -7,15 +7,15 @@
 
 namespace
 {
-constexpr gpio_num_t PIN_RESET = GPIO_NUM_40;   ///< Pull-up 2 kOhm auf VDDPST_5
-constexpr gpio_num_t PIN_INT = GPIO_NUM_42;     ///< ohne Pull-up auf der Platine (R75 nicht bestückt)
-constexpr uint32_t I2C_TAKT_HZ = 100000;          ///< wie im Original-RetroRadio: der ganze Bus mit 100 kHz, weil eine DS1307 nicht mehr verträgt
-constexpr uint16_t REG_PRODUKT = 0x8140;        ///< vier Byte ASCII, „911“
-constexpr uint16_t REG_KONFIGURATION = 0x8047;  ///< Konfigurationsversion, 0 = nicht geladen
-constexpr uint16_t REG_AUFLOESUNG = 0x8048;     ///< X und Y je 16 Bit, niederwertiges Byte zuerst
-constexpr uint16_t REG_STATUS = 0x814E;         ///< Bit 7 neue Daten, Bit 0 bis 3 Anzahl der Punkte
-constexpr uint16_t REG_PUNKT1 = 0x814F;         ///< je Punkt 8 Byte: Kennung, X, Y, Größe, frei
-constexpr size_t PUNKT_BYTES = 8;
+    constexpr gpio_num_t PIN_RESET = GPIO_NUM_40;   ///< Pull-up 2 kOhm auf VDDPST_5
+    constexpr gpio_num_t PIN_INT = GPIO_NUM_42;     ///< ohne Pull-up auf der Platine (R75 nicht bestückt)
+    constexpr uint32_t I2C_TAKT_HZ = 100000;          ///< wie im Original-RetroRadio: der ganze Bus mit 100 kHz, weil eine DS1307 nicht mehr verträgt
+    constexpr uint16_t REG_PRODUKT = 0x8140;        ///< vier Byte ASCII, „911“
+    constexpr uint16_t REG_KONFIGURATION = 0x8047;  ///< Konfigurationsversion, 0 = nicht geladen
+    constexpr uint16_t REG_AUFLOESUNG = 0x8048;     ///< X und Y je 16 Bit, niederwertiges Byte zuerst
+    constexpr uint16_t REG_STATUS = 0x814E;         ///< Bit 7 neue Daten, Bit 0 bis 3 Anzahl der Punkte
+    constexpr uint16_t REG_PUNKT1 = 0x814F;         ///< je Punkt 8 Byte: Kennung, X, Y, Größe, frei
+    constexpr size_t PUNKT_BYTES = 8;
 } // namespace
 
 bool CrowPanelTouch::begin()

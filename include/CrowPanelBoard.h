@@ -69,6 +69,7 @@ namespace CrowPanelBoard
         {
             return static_cast<int32_t>(now - m_nextPoll) >= 0;
         }
+
         /** @brief Übernimmt eine Abfrage und plant die nächste. Ein abweichender Zustand gilt erst nach HeadphoneStableReads gleichen Abfragen in Folge. @param now millis(). @param read Lesen bestätigt. @param inserted Gelesener Steckerzustand. @return true, wenn sich der entprellte Zustand geändert hat. */
         bool update(uint32_t now, bool read, bool inserted)
         {
@@ -84,6 +85,7 @@ namespace CrowPanelBoard
             m_inserted = inserted;
             return true;
         }
+
         /** @brief Entprellter Steckerzustand. */
         bool inserted() const
         {

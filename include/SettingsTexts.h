@@ -39,6 +39,7 @@ enum class SettingsTextKey : unsigned
     WIFI_HOSTNAME_EDIT,
     SAVED_TITLE,
     SAVED_MSG,
+    WIFI_SAVED_MSG,
     SAVED_RESTART_BTN,
     SAVED_LATER_BTN,
     EXIT_TITLE,

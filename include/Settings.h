@@ -259,8 +259,8 @@ public:
     bool completeScan(uint32_t id, Outcome outcome, const WifiList::Network *networks, size_t count, bool more, Error error = Error::None);
     /** @brief Meldet den tatsächlichen Abschluss von Test/Zeit/PIN/Neustart oder letzter Stumm-/Navigationsaktion. @param completion Passende ID und Typ, Test-Erfolg benötigt brauchbare IPv4. @return true bei passender Meldung. */
     bool complete(const Completion &completion);
-    /** @brief Bestätigt dauerhaftes Speichern, nicht Queueannahme. @param id Save-ID. @param success Dauerhafter Erfolg. @param stored Zentral validierter gespeicherter Stand. Bei Fehler ignoriert. @param revision Neue Revision. @param error Fehlercode. @param restartRequired Zentrale Anwendungsentscheidung. @return true bei passender Meldung. */
-    bool completeSave(uint32_t id, bool success, const Configuration &stored, uint64_t revision, Error error = Error::Storage, bool restartRequired = false);
+    /** @brief Bestätigt dauerhaftes Speichern, nicht Queueannahme. @param id Save-ID. @param success Dauerhafter Erfolg. @param stored Zentral validierter gespeicherter Stand. Bei Fehler ignoriert. @param revision Neue Revision. @param error Fehlercode. @param restartRequired Zentrale Anwendungsentscheidung. @param profilesApplied Geänderte WLAN-Profile gelten schon ohne Neustart. Ohne zugleich geänderten Netzwerknamen folgt dann die einfache Meldung statt des Dialogs, der einen Neustart anbietet. @return true bei passender Meldung. */
+    bool completeSave(uint32_t id, bool success, const Configuration &stored, uint64_t revision, Error error = Error::Storage, bool restartRequired = false, bool profilesApplied = false);
     /** @brief Meldet lokale Änderungen. @return Kategorien-/Profilbitmaske. */
     uint32_t changedFields() const;
 

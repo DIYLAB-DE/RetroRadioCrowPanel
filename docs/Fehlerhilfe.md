@@ -16,7 +16,7 @@
 | Terminal meldet einen Python-Fehler mit **resultcallback** und `platformio==4.3.4` | Das Terminal startet ein veraltetes PlatformIO aus den Paketquellen der Linux-Distribution. Das Terminal über **PlatformIO: New Terminal** öffnen oder `~/.platformio/penv/bin/pio` mit vollem Pfad aufrufen, siehe [Erstinstallation](RetroRadioCrowPanel-Ersteinrichtung.md#pio-bricht-mit-resultcallback-ab). |
 | Upload-Port belegt | Serielle Monitore und andere Programme schließen, die denselben Anschluss geöffnet haben. |
 | Bild bleibt schwarz oder das Gerät startet immer wieder neu | Die Versorgung reicht nicht. Ein USB-Netzteil mit 5 V und mindestens 2 A an **USB2.0** anschließen, empfohlen ist ein USB-C-Netzteil mit 20 W. Das Datenkabel an **UART0** darf stecken bleiben, siehe [Versorgung](Geräte-und-Anschlüsse.md#versorgung). |
-| WLAN bleibt getrennt | 2,4-GHz-Netz, Passwort und aktiviertes Profil prüfen. **test** ausführen, speichern und den angebotenen Neustart durchführen. Nach einem Test mit falschem Passwort weisen manche Router das Gerät einige Minuten lang ab. |
+| WLAN bleibt getrennt | 2,4-GHz-Netz, Passwort und aktiviertes Profil prüfen. **test** ausführen, speichern und einen angebotenen Neustart durchführen. Nach einem Test mit falschem Passwort weisen manche Router das Gerät einige Minuten lang ab. |
 | Radiosymbol ist gesperrt | Ohne WLAN-Verbindung lässt sich das Radio nicht öffnen. WLAN einrichten, der SD-Player geht auch ohne. |
 | Browser erreicht das CrowPanel nicht | Die aktuelle IP-Adresse am Gerät ablesen und mit `http://` öffnen. Rechner und CrowPanel müssen sich erreichen können, Gastnetz oder Client-Isolation können das verhindern. |
 | Radiosteuerung fehlt im Browser | Das Radio am Gerät öffnen und die Weboberfläche entsperren. |

@@ -446,6 +446,10 @@ void AudioManager::handleInfo(const Audio::msg_t &msg)
             m_codec.store(Codec::None);
     }
 
+    // Nur die beiden Meldungen der Stream-Überwachung kommen ins Log: "slow stream" bei anhaltend leerem Eingangspuffer, "Stream lost" vor dem selbsttätigen Neuverbinden der Bibliothek.
+    if (strstr(msg.msg, "slow stream") || strstr(msg.msg, "Stream lost"))
+        LOG_WARNING_F("Radio Stream: %s", msg.msg);
+
     enqueueEvent_(AudioManagerEventType::INFO, msg.msg);
 }
 

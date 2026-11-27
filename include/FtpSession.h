@@ -191,7 +191,7 @@ private:
     bool m_passive = false;                    ///< Passiver Datenport ist offen
     unsigned m_failures = 0;                   ///< Fehlgeschlagene Anmeldungen dieser Verbindung
     uint64_t m_rest = 0;                       ///< Versatz aus REST für den nächsten RETR
-    uint64_t m_started = 0, m_lastActivity = 0; ///< Beginn der Verbindung und letzter Befehl in ms
+    uint64_t m_started = 0, m_lastActivity = 0; ///< Beginn der Verbindung und Beginn oder Ende des letzten Befehls in ms
     WebValidation::LoginLock m_lock;           ///< Mindestabstand und wachsende Sperre nach Fehlversuchen, über alle Verbindungen
     Transfer m_transfer = Transfer::None;      ///< Laufende Übertragung
     uint64_t m_bytes = 0;                      ///< Bytes der laufenden oder letzten Übertragung

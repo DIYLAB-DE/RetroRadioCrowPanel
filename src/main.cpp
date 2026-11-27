@@ -86,10 +86,23 @@ namespace
         bool pressed = false;       ///< Finger liegt
         bool pressedNow = false;    ///< In diesem Durchlauf aufgesetzt
         bool releasedNow = false;   ///< In diesem Durchlauf losgelassen
-        bool isPressed() const { return pressed; }
-        bool wasPressed() const { return pressedNow; }
-        bool wasReleased() const { return releasedNow; }
+
+        bool isPressed() const
+        {
+            return pressed;
+        }
+
+        bool wasPressed() const
+        {
+            return pressedNow;
+        }
+
+        bool wasReleased() const
+        {
+            return releasedNow;
+        }
     };
+
     TouchState s_touchState;
 
     /** @brief Fragt den GT911 ab und leitet Aufsetzen und Loslassen ab. Ohne neue Meldung bleibt der Zustand. Nur im UI-Task. */
@@ -115,6 +128,7 @@ namespace
         s_touchState.y = flipped ? CrowPanelRender::PanelHeight - 1 - points[0].y : points[0].y;
         return s_touchState;
     }
+
     CrowPanelCornerGesture s_corner;
     CrowPanelTimeWindow s_timeWindow;
     Settings::Sound s_audioSettings;
@@ -400,6 +414,33 @@ namespace
     void applyUkw(const Settings::Configuration &config)
     {
         s_btSender.setUkw(config.ukwEnabled, config.ukwKhz, config.ukwPower);
+    }
+
+    /** @brief Liefert den ersten Favoriten mit Adresse, 0 ohne Favoriten. Senderwahl eines Geräts ohne gesicherten Sender. */
+    int firstPresetStation()
+    {
+        for (int i = 0; i < s_stations.getStationCount(); ++i)
+        {
+            Station station;
+            if (s_stations.getStation(i, station) && station.preset && station.url[0])
+                return i;
+        }
+        return 0;
+    }
+
+    /** @brief Setzt den Radiozustand der Bedienung auf den Stand eines Geräts ohne gesicherte Radiowerte: Vorgaben für Balance, Klang, Modus und Stile, leiser Startpegel, nicht stumm, erster Favorit. rememberRadioState() gibt ihn im selben Schleifendurchlauf an den Dienst, mit DS1307 steht er vor dem Neustart in deren NVRAM. Nur nach dem Zurücksetzen aller Einstellungen, dem ein Neustart folgt. */
+    void resetRadioState()
+    {
+        const RadioPreferences defaults;
+        setVolume(std::min(defaults.volume, AudioManager::DefaultVolume));
+        s_userMuted = false;
+        s_balance = defaults.balance;
+        memcpy(s_tone, defaults.tone, sizeof(s_tone));
+        s_visualizer.applyPreferences(defaults);
+        g_audioManager.setBalance(s_balance);
+        g_audioManager.setTone(s_tone[0], s_tone[1], s_tone[2]);
+        s_selectedStation = firstPresetStation();
+        s_lastStatus = 0;
     }
 
     /** @brief Merkt den zentralen Radiozustand aus allen Bedienwegen ohne I/O, der Dienst fasst tatsächliche Änderungen zusammen. */
@@ -898,7 +939,7 @@ namespace
             using T = Settings::RequestType;
             if (result.type == T::Save || result.type == T::ResetDefaults)
             {
-                s_settings.completeSave(result.id, result.outcome == Settings::Outcome::Success, result.config, result.revision, result.error);
+                s_settings.completeSave(result.id, result.outcome == Settings::Outcome::Success, result.config, result.revision, result.error, false, result.profilesApplied);
                 // Der Log-Schalter schaltet wie im Original nur die Logausgabe, alle anderen Werte bleiben unverändert und werden nicht neu angewendet.
                 if (result.outcome == Settings::Outcome::Success && result.changedFields == Settings::SerialLogs)
                 {
@@ -931,6 +972,9 @@ namespace
                 }
                 else if (result.outcome == Settings::Outcome::Success)
                 {
+                    // Der Dienst hat die gesicherten Radiowerte schon gelöscht. Ohne diesen Schritt schriebe rememberRadioState() den bisherigen Stand vor dem Neustart zurück.
+                    if (result.type == T::ResetDefaults)
+                        resetRadioState();
                     s_config = result.config;
                     s_web.invalidateSessions();
                     s_settings.setConfiguration(s_config, result.revision);
@@ -1130,7 +1174,7 @@ namespace
             }
             else if (command.action == A::Screenshot)
                 code = usbShotActive() ? 409 : s_web.capture(s_display) ? 200
-                                                                         : 503;
+                                                                        : 503;
             else if (command.action == A::LeaseFiles)
                 code = s_services.grantFileLease(FileLease::Owner::Web, sdBusy()) == FileLease::Answer::Granted ? 200 : 409;
             else if (command.action == A::ReleaseFiles)
@@ -2041,15 +2085,7 @@ void setup()
     }
     LOG_INFO_F("CHIPTEMPERATUR Sensor=%s", s_chipTemp ? "bereit" : "FEHLER");
     s_stations.loadStations();
-    for (int i = 0; i < s_stations.getStationCount(); ++i)
-    {
-        Station station;
-        if (s_stations.getStation(i, station) && station.preset && station.url[0])
-        {
-            s_selectedStation = i;
-            break;
-        }
-    }
+    s_selectedStation = firstPresetStation();
     // Vor jedem begin(), das Farben in Sprites oder Symbolcaches einbrennt. Ein Wechsel wirkt nach dem Neustart.
     ModernFarben modern;
     const bool modernStored = CrowPanelConfig::loadModern(modern);

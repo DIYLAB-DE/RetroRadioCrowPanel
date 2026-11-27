@@ -54,7 +54,7 @@ Rechts daneben zeigt die Taste neben **Sekundenzeiger**, wie der rote Zeiger der
 
 [![Systemeinstellungen](bilder/web/system-klein.png)](bilder/web/system.png)
 
-**Speichern & neu starten** übernimmt die Systemeinstellungen und startet das CrowPanel neu. **Neu starten** und **Werkseinstellungen** sind eigene Aktionen. Ein Zurücksetzen löscht persönliche Einstellungen, es ist kein normaler Schritt für ein Firmware-Update.
+**Speichern & neu starten** übernimmt die Systemeinstellungen und startet das CrowPanel neu. **Neu starten** und **Werkseinstellungen** sind eigene Aktionen. **Werkseinstellungen** setzt nach zwei Rückfragen die Einstellungen einschließlich der WLAN-Profile und der PIN zurück und löscht die gesicherten Radiowerte (Lautstärke, Klangregler, Senderwahl und Visualisierung), die eigenen Farben des Themas Individuell und das FTP-Passwort. Die Senderliste bleibt erhalten. Notiere vorher Deine WLAN-Daten, danach ist das CrowPanel erst nach der Einrichtung am Display wieder im Netz. Es ist kein normaler Schritt für ein Firmware-Update.
 
 ## Thema und Farben
 

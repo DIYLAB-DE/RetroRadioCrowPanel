@@ -48,6 +48,48 @@ namespace
         return audio.state == AudioManager::State::Starting || (audio.file && (audio.state == AudioManager::State::Streaming || audio.state == AudioManager::State::Paused));
     }
 
+    /** @brief Name des WLAN-Energiesparmodus für die Logzeile WLAN_FUNK. */
+    const char *wifiSleepName(wifi_ps_type_t mode)
+    {
+        switch (mode)
+        {
+        case WIFI_PS_NONE:
+            return "aus";
+        case WIFI_PS_MIN_MODEM:
+            return "MIN_MODEM";
+        case WIFI_PS_MAX_MODEM:
+            return "MAX_MODEM";
+        default:
+            return "unbekannt";
+        }
+    }
+
+    /** @brief Name des ausgehandelten Funkmodus für die Logzeile WLAN_FUNK nach der Aufzählung des P4-Kerns. Der C6 zählt nach der Aufzählung seines eigenen ESP-IDF, die davon abweichen kann, deshalb steht der Rohwert mit im Log. */
+    const char *wifiPhyName(wifi_phy_mode_t mode)
+    {
+        switch (mode)
+        {
+        case WIFI_PHY_MODE_LR:
+            return "LR";
+        case WIFI_PHY_MODE_11B:
+            return "11b";
+        case WIFI_PHY_MODE_11G:
+            return "11g";
+        case WIFI_PHY_MODE_11A:
+            return "11a";
+        case WIFI_PHY_MODE_HT20:
+            return "HT20";
+        case WIFI_PHY_MODE_HT40:
+            return "HT40";
+        case WIFI_PHY_MODE_HE20:
+            return "HE20";
+        case WIFI_PHY_MODE_VHT20:
+            return "VHT20";
+        default:
+            return "unbekannt";
+        }
+    }
+
     /** @brief Liest Kartenordner für SdFileScan wie Portal und FTP über FATFS (FatDirectory), damit die FAT-Attribute versteckt und System für SystemEntries ankommen. Nur im Dienstworker. Vor jedem Eintrag wird 1 ms abgegeben, damit gleich priorisierte Tasks laufen. */
     class CardDirectory : public SdFileScan::Directory
     {
@@ -120,7 +162,7 @@ bool AppServices::validConfiguration(const Settings::Configuration &config)
 void AppServices::load()
 {
     CrowPanelConfig::load(m_config, m_revision, &m_extras);
-    m_radio = CrowPanelConfig::loadRadio();
+    m_radio = CrowPanelConfig::loadRadio(&m_radioStored);
     // Die Warnung zu einem ungültigen Eintrag meldet schon das Laden beim Start in setup().
     m_modernStored = CrowPanelConfig::loadModern(m_modern, false);
     if (CrowPanelConfig::loadFtpPassword(m_ftpPassword))
@@ -188,13 +230,17 @@ bool AppServices::begin(uint8_t defaultStation)
     load();
     m_radioNvs = m_radio;
     uint8_t storedStation = 0;
-    m_radio.station = CrowPanelConfig::loadStation(storedStation) ? storedStation : defaultStation < 70 ? defaultStation : 0;
+    m_radio.station = CrowPanelConfig::loadStation(storedStation) ? storedStation : defaultStation < 70 ? defaultStation
+                                                                                                        : 0;
     const bool rtcReady = m_rtc.begin();
-    // Auch ohne RTC aufrufen: loadRadio begrenzt dann den Pegel aus radio_v1.
-    if (m_rtc.loadRadio(m_radio, AudioManager::DefaultVolume))
+    // Auch ohne RTC aufrufen: Ohne gültiges NVRAM gilt ein gesicherter Eintrag radio_v1 unverändert, nur die Vorgaben eines Geräts ohne gesicherte Radiowerte begrenzt loadRadio auf den leisen Startpegel.
+    const uint8_t quietVolume = m_radioStored ? AudioManager::MaxVolume : AudioManager::DefaultVolume;
+    if (m_rtc.loadRadio(m_radio, quietVolume))
         LOG_INFO("RTC Radiozustand geladen.");
+    else if (m_radioStored)
+        LOG_INFO("RTC Radiozustand fehlt oder ist ungültig, gesicherte NVS-Werte übernommen.");
     else
-        LOG_INFO_F("RTC Radiozustand fehlt oder ist ungültig, NVS-Werte mit Pegel höchstens %u übernommen.", AudioManager::DefaultVolume);
+        LOG_INFO_F("RTC Radiozustand fehlt oder ist ungültig, Vorgaben mit Pegel höchstens %u übernommen.", AudioManager::DefaultVolume);
     if (rtcReady)
     {
         const auto status = m_rtc.status();
@@ -338,6 +384,8 @@ bool AppServices::prepareWifi()
     }
     WiFi.persistent(false);
     WiFi.setHostname(m_config.hostname);
+    // Ohne Energiesparmodus bleibt der Funkteil des C6 zwischen den Beacons wach, der Router muss keine Pakete zurückhalten. Mit Energiesparmodus und 802.11ax kann ein Stream sonst alle 19 bis 35 s für rund 5 s aussetzen (an einer C6-Firmware 1.4.1 gemessen). Vor dem Start der Station merkt der Kern den Wert nur vor und setzt ihn mit dem Start.
+    WiFi.setSleep(false);
     LOG_INFO("WLAN: C6-Station initialisieren.");
     m_wifiReady = WiFi.STA.begin(false);
     if (!m_wifiReady)
@@ -354,6 +402,31 @@ bool AppServices::prepareWifi()
         return false;
     }
     return true;
+}
+
+void AppServices::logWifiRadio()
+{
+    const uint32_t started = millis();
+    char sleep[24], protocol[24], phy[24];
+    wifi_ps_type_t ps = WIFI_PS_NONE;
+    esp_err_t result = esp_wifi_get_ps(&ps);
+    if (result == ESP_OK)
+        snprintf(sleep, sizeof(sleep), "%s", wifiSleepName(ps));
+    else
+        snprintf(sleep, sizeof(sleep), "Fehler(0x%x)", static_cast<unsigned>(result));
+    uint8_t bitmap = 0;
+    result = esp_wifi_get_protocol(WIFI_IF_STA, &bitmap);
+    if (result == ESP_OK)
+        snprintf(protocol, sizeof(protocol), "0x%02x", bitmap);
+    else
+        snprintf(protocol, sizeof(protocol), "Fehler(0x%x)", static_cast<unsigned>(result));
+    wifi_phy_mode_t mode = WIFI_PHY_MODE_LR;
+    result = esp_wifi_sta_get_negotiated_phymode(&mode);
+    if (result == ESP_OK)
+        snprintf(phy, sizeof(phy), "%s(%d)", wifiPhyName(mode), static_cast<int>(mode));
+    else
+        snprintf(phy, sizeof(phy), "Fehler(0x%x)", static_cast<unsigned>(result));
+    LOG_PLAIN_F("WLAN_FUNK Energiesparmodus=%s Protokoll=%s Funkmodus=%s Dauer=%lu ms", sleep, protocol, phy, static_cast<unsigned long>(millis() - started));
 }
 
 void AppServices::applyTime()
@@ -396,6 +469,7 @@ void AppServices::connectProfiles()
     else if (step == WifiSequence::Step::Connected)
     {
         LOG_INFO_F("WLAN verbunden IP=%s RSSI=%d", WiFi.localIP().toString().c_str(), WiFi.RSSI());
+        logWifiRadio();
         applyTime();
     }
     m_wifiConnecting.store(m_sequence.active());
@@ -442,6 +516,11 @@ void AppServices::execute()
         {
             m_result.error = Error::Invalid;
         }
+        // Vor der Konfiguration: Scheitert das Löschen, bleibt sie mit ihrer Revision unverändert und der Auftrag lässt sich wiederholen.
+        else if (m_work.type == Type::ResetDefaults && !resetStored())
+        {
+            m_result.error = Error::Storage;
+        }
         // Log-Schalter und PIN-Sperre schreiben wie im Original nur ihren eigenen Eintrag, der Sekundenzeiger ebenso. Alle anderen Aufträge schreiben den ganzen Datensatz.
         else if (m_result.changedFields == Settings::SerialLogs   ? !CrowPanelConfig::saveSerialLogs(candidate.serialLogs)
                  : m_result.changedFields == Settings::PinLock    ? !CrowPanelConfig::savePinLock(candidate.pinLock)
@@ -460,6 +539,12 @@ void AppServices::execute()
             portEXIT_CRITICAL(&m_configLock);
             if (timeChanged)
                 applyTime();
+            // Ohne Verbindung beginnt der Ablauf nach geänderten Profilen neu. Er endet, wenn kein Profil freigegeben ist, ein danach wieder freigegebenes Profil bliebe sonst bis zum Neustart unverbunden.
+            if ((m_result.changedFields & (Settings::Profile0 | Settings::Profile1 | Settings::Profile2)) && WiFi.status() != WL_CONNECTED)
+            {
+                m_sequence.start();
+                m_result.profilesApplied = true;
+            }
         }
         m_result.revision = configuration(m_result.config);
         mbedtls_platform_zeroize(&candidate, sizeof(candidate));
@@ -564,6 +649,7 @@ void AppServices::execute()
                     for (int i = 0; i < 4; ++i)
                         m_result.ip[i] = ip[i];
                     LOG_PLAIN_F("WLAN VERBUNDEN IP=%s RSSI=%d", ip.toString().c_str(), WiFi.RSSI());
+                    logWifiRadio();
                 }
                 else
                 {
@@ -588,6 +674,28 @@ void AppServices::execute()
     LOG_INFO_F("DIENST Typ=%u Auftrag=%lu Ergebnis=%u Fehler=%u", static_cast<unsigned>(m_result.type), static_cast<unsigned long>(m_result.id), static_cast<unsigned>(m_result.outcome), static_cast<unsigned>(m_result.error));
     xQueueSend(m_results, &m_result, portMAX_DELAY);
     mbedtls_platform_zeroize(&m_result, sizeof(m_result));
+}
+
+bool AppServices::resetStored()
+{
+    const bool erased = CrowPanelConfig::resetRadio() && CrowPanelConfig::resetModern() && CrowPanelConfig::resetFtpPassword();
+    // Rücklesen auch nach einem Fehler: Der Stand im RAM soll zeigen, was nach dem nächsten Neustart gilt.
+    ModernFarben modern;
+    const bool modernStored = CrowPanelConfig::loadModern(modern, false);
+    char password[FtpProtocol::PasswordCapacity]{};
+    CrowPanelConfig::loadFtpPassword(password);
+    m_radioNvs = CrowPanelConfig::loadRadio(&m_radioStored);
+    portENTER_CRITICAL(&m_configLock);
+    m_modern = modern;
+    m_modernStored = modernStored;
+    const bool passwordChanged = memcmp(m_ftpPassword, password, sizeof(m_ftpPassword)) != 0;
+    memcpy(m_ftpPassword, password, sizeof(m_ftpPassword));
+    portEXIT_CRITICAL(&m_configLock);
+    FtpProtocol::wipe(password, sizeof(password));
+    if (passwordChanged)
+        m_ftpPasswordRevision.fetch_add(1);
+    LOG_INFO_F("Radiowerte, Modern-Farben und FTP-Passwort im NVS %s", erased ? "gelöscht" : "nicht vollständig gelöscht");
+    return erased;
 }
 
 SdServiceStatus AppServices::mediaStatus()

@@ -11,6 +11,7 @@
 #include <cJSON.h>
 #include <esp_random.h>
 #include <esp_heap_caps.h>
+#include <esp_netif.h>
 #include <esp_ota_ops.h>
 #include <esp_timer.h>
 #include <mbedtls/platform_util.h>
@@ -37,6 +38,16 @@ namespace
     constexpr uint32_t FtpWaitStepMs = 50;  ///< Abfrageabstand, während der Dienstworker ein FTP-Passwort erzeugt
     constexpr int FtpPasswordSteps = 60;    ///< Höchstens 3 s auf ein erstmals erzeugtes Passwort warten
     constexpr int FtpRenewSteps = 100;      ///< Höchstens 5 s auf ein erneuertes und gespeichertes Passwort warten
+
+    /** @brief Liest die IPv4-Adresse der WLAN-Station ohne WLAN-Aufruf. Den Netzstatus der Dienste trägt der Dienstworker erst in seiner Schleife nach, direkt nach dem Verbinden fehlt die Adresse dort noch. @param ip Ziel, 0.0.0.0 ohne Adresse. */
+    void stationAddress(uint8_t (&ip)[4])
+    {
+        memset(ip, 0, sizeof(ip));
+        esp_netif_t *netif = esp_netif_get_handle_from_ifkey("WIFI_STA_DEF");
+        esp_netif_ip_info_t info{};
+        if (netif && esp_netif_get_ip_info(netif, &info) == ESP_OK)
+            memcpy(ip, &info.ip.addr, sizeof(ip));
+    }
 
     /** @brief Begrenzt ausstehende HTTP-Sendedaten, damit dem C6-SDIO-Transport interner RAM bleibt. */
     int sendBounded(httpd_handle_t, int socket, const char *bytes, size_t length, int flags)
@@ -424,7 +435,8 @@ bool WebPortal::authenticated(httpd_req_t *r)
     // Ohne PIN-Sperre öffnet sich das Portal wie im Original ohne Anmeldung.
     if (!m_services->pinLockEnabled())
         return true;
-    char cookie[256]{};
+    // So lang wie der Kopfpuffer des Servers: Schickt der Browser für dieselbe Adresse weitere Cookies mit, darf der eigene nicht an der Pufferlänge scheitern.
+    char cookie[CONFIG_HTTPD_MAX_REQ_HDR_LEN + 1]{};
     if (httpd_req_get_hdr_value_str(r, "Cookie", cookie, sizeof(cookie)) != ESP_OK)
         return false;
     const uint32_t generation = m_authGeneration.load();
@@ -458,7 +470,9 @@ bool WebPortal::trusted(httpd_req_t *r, bool post)
     }
     Settings::Configuration config;
     m_services->configuration(config);
-    const bool own = WebValidation::ownHost(host, m_services->networkStatus().ip, config.hostname);
+    uint8_t ip[4];
+    stationAddress(ip);
+    const bool own = WebValidation::ownHost(host, ip, config.hostname);
     mbedtls_platform_zeroize(&config, sizeof(config));
     if (!own)
     {

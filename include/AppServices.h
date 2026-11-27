@@ -45,6 +45,7 @@ public:
         Settings::Configuration config;                           ///< Gespeicherte Konfiguration nach Save und ResetDefaults
         uint64_t revision = 0;                                    ///< Revision dieser Konfiguration
         uint32_t changedFields = 0;                               ///< Geänderte Bereiche (Settings::Field) bei Save, alle bei ResetDefaults
+        bool profilesApplied = false;                             ///< Bei Save: Der Verbindungsablauf begann mit den geänderten WLAN-Profilen neu, weil keine Verbindung bestand. Die Profile gelten ohne Neustart
         uint8_t ip[4]{};                                          ///< Erhaltene IPv4-Adresse nach einem Verbindungstest
         WifiList::Network networks[WifiList::MaxNetworks];        ///< Suchergebnis
         size_t count = 0;                                         ///< Anzahl der Netze im Suchergebnis
@@ -344,8 +345,11 @@ private:
     ModernRequest m_modernWork;                                          ///< Kopierter Auftrag im Dienstworker
     /** @brief Speichert oder löscht rr_crowpanel/modern_v1 nach m_modernWork, liest zur Bestätigung zurück und reiht das Ergebnis ein. Nur im Dienstworker. */
     void executeModern();
-    RadioPreferences m_radio;
-    RadioPreferences m_radioNvs;
+    /** @brief Löscht für das Zurücksetzen aller Einstellungen die gesicherten Radiowerte, die Grundfarben von Modern und das FTP-Passwort im NVS und führt den Stand im RAM nach. Ein angemeldeter FTP-Client wird über die Passwortrevision getrennt, bei eingeschaltetem FTP fordert der Dienst danach sofort ein neues Passwort an. Den Radiozustand der Bedienung setzt der UI-Task nach dem Ergebnis selbst zurück. Nur im Dienstworker. @return false bei NVS-Fehler, dann kann ein Teil schon gelöscht sein. */
+    bool resetStored();
+    RadioPreferences m_radio;        ///< Aktueller Radiozustand aus allen Bedienwegen, geschützt durch m_configLock
+    RadioPreferences m_radioNvs;     ///< Zuletzt im NVS gesicherter Radiozustand, nur im Dienstworker
+    bool m_radioStored = false;      ///< rr_crowpanel/radio_v1 war beim Laden vorhanden und gültig
     CrowPanelRtc m_rtc;
     CrowPanelRtc::Status m_rtcStatus;
     uint32_t m_rtcAttempt = 0, m_rtcTimeAttempt = 0, m_rtcRefresh = 0, m_flashAttempt = 0;
@@ -372,8 +376,10 @@ private:
     static std::atomic<bool> s_rtcSyncPending;
     /** @brief Führt ausschließlich hier langsame Dienste aus. */
     static void worker(void *context);
-    /** @brief Initialisiert einmalig die C6-Station (SDIO-Pins, Hostname) und prüft die MAC. @return false bei Pin-, Start- oder MAC-Fehler. */
+    /** @brief Initialisiert einmalig die C6-Station (SDIO-Pins, Hostname, WLAN-Energiesparmodus aus) und prüft die MAC. @return false bei Pin-, Start- oder MAC-Fehler. */
     bool prepareWifi();
+    /** @brief Schreibt die Logzeile WLAN_FUNK mit Energiesparmodus, Protokollmaske und ausgehandeltem Funkmodus der Station, alle drei vom C6 zurückgelesen, dazu die Dauer der drei Abfragen. Nur im Dienstworker und nur bei bestehender Verbindung, vorher steht der Funkmodus nicht fest. */
+    void logWifiRadio();
     /** @brief Führt den kopierten Auftrag m_work aus (Speichern, Zurücksetzen, Zeit setzen, WLAN-Suche, Verbindungstest), reiht das Ergebnis ein und löscht danach Auftrag und Ergebnis. */
     void execute();
     /** @brief Übernimmt Zeitzone und, bei bestehender WLAN-Verbindung, den NTP-Abgleich. Erhöht timeRevision(). */

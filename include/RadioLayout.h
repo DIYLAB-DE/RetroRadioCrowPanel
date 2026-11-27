@@ -22,16 +22,19 @@ namespace RadioLayout
         constexpr int BOTTOM_DIVIDER_Y = 384; ///< Original 307
         constexpr int STATION_PITCH_NUM = 64; ///< Senderabstand als Bruch 64/5 = 12,8 px, Original 10, 1,28-fach wie die waagerechte Verteilung
         constexpr int STATION_PITCH_DEN = 5;
+
         /** @brief X-Position des Senders index, auf ganze Pixel gerundet. Original 10 + 10 x index. */
         constexpr int stationX(int index)
         {
             return ((index + 1) * STATION_PITCH_NUM * 2 + STATION_PITCH_DEN) / (2 * STATION_PITCH_DEN);
         }
+
         /** @brief Sender unter der Skalenspalte x. Wie im Original gehört zu jedem Sender der Streifen links von seiner Position, einen Senderabstand breit. */
         constexpr int stationAt(int x)
         {
             return x * STATION_PITCH_DEN / STATION_PITCH_NUM;
         }
+
         constexpr int STATION_X0 = stationX(0); ///< 13, X-Position des ersten Senders, Original 10
         constexpr int STATION_Y0 = 128;       ///< Zeile des ersten Senders, Original 102
         constexpr int STATION_STEP_Y = 25;    ///< Zeilenabstand, Original 20

@@ -6,7 +6,7 @@ Nach der [Erstinstallation](RetroRadioCrowPanel-Ersteinrichtung.md) zeigt das Ha
 
 [![Hauptmenü](bilder/bedienung/hauptmenue-klein.png)](bilder/bedienung/hauptmenue.png)
 
-Das Haus unten rechts führt aus jeder Anwendung zurück ins Hauptmenü. Bei Radio und SD-Player öffnet es zuerst den Sleep-Timer: Tippe dort erneut auf das Haus, um die Wiedergabe sofort zu beenden und ins Hauptmenü zu wechseln.
+Das Haus unten rechts führt aus jeder Anwendung zurück ins Hauptmenü. In Radio und SD-Player beendet ein kurzer Tipp dabei sofort die Wiedergabe. Hältst Du das Haus dort mindestens 0,8 Sekunden gedrückt, öffnet sich stattdessen der Sleep-Timer.
 
 Ein kurzer Tipp wählt eine Taste oder ein Feld. Listen lassen sich mit dem Finger verschieben. Ein längerer Druck oder Wischen hat nur an den jeweils beschriebenen Stellen eine Zusatzfunktion. Eingabedialoge besitzen eigene Bestätigungs- und Abbruchmöglichkeiten.
 
@@ -40,7 +40,7 @@ Das rechte Symbol mit den Schiebereglern öffnet die Einstellungen. Links wähls
 
 ### WLAN
 
-Wähle ein Profil, tippe auf **scannen** und wähle Dein Netz in der Liste. Über **passwort** gibst Du das Passwort ein, **test** prüft die Verbindung und zeigt bei Erfolg IP-Adresse und Signalstärke. Aktiviere das Profil mit seinem Schalter und tippe auf **speichern**. Der anschließende Dialog bietet **neustart** an. Beim Start verbindet das CrowPanel die aktivierten Profile der Reihe nach, bis eines erreichbar ist. Unterstützt werden Netze im 2,4-GHz-Band.
+Wähle ein Profil, tippe auf **scannen** und wähle Dein Netz in der Liste. Über **passwort** gibst Du das Passwort ein, **test** prüft die Verbindung und zeigt bei Erfolg IP-Adresse und Signalstärke. Aktiviere das Profil mit seinem Schalter und tippe auf **speichern**. Besteht dabei schon eine WLAN-Verbindung, etwa nach einem erfolgreichen Test, bietet der anschließende Dialog **neustart** an, die geänderten Profile gelten dann nach dem Neustart. Ohne Verbindung verbindet das CrowPanel sofort mit den gespeicherten Profilen und meldet nur das Speichern. Beim Start und nach einem solchen Speichern verbindet das CrowPanel die aktivierten Profile der Reihe nach, bis eines erreichbar ist. Unterstützt werden Netze im 2,4-GHz-Band.
 
 Unter **Netzwerkname** änderst Du den Namen, mit dem sich das CrowPanel im Netzwerk meldet. Ab Werk heißt es **RetroRadio-Crow-** mit vier Zeichen seiner Gerätenummer dahinter, etwa **RetroRadio-Crow-1A2B**. So heißen mehrere CrowPanel im selben Netz verschieden. Erlaubt sind 1 bis 32 Buchstaben, Ziffern und Bindestriche.
 
@@ -86,7 +86,7 @@ Auf der Seite **Bildschirm** stellst Du das **Hintergrundlicht** in Zehnerschrit
 
 Die Seite **Info & Neustart** zeigt unter **Netzwerk** WLAN-Name, Netzwerkname, IP-Adresse, Gateway, Signal, MAC-Adresse des WLAN-Chips, Kanal, Zeitserver, den letzten Abgleich und den Zustand von FTP. Unter **System** stehen Version, Firmwaregröße, Prozessor, Speicher, die serielle Verbindung, Chiptemperatur, freier Arbeitsspeicher und die Laufzeit. Die Zeile **I2C** nennt die Adressen der Teilnehmer am I2C-Bus: `0x5D` ist der Touch, `0x2F` ein Hilfsbaustein der Platine und `0x68` eine angeschlossene [DS1307](Geräte-und-Anschlüsse.md#uhr-ds1307). Die **Version** ist die Nummer des installierten Release. Die Zeile **FTP** zeigt **aus** oder **an** samt Adresse, das Passwort steht nur in der Weboberfläche.
 
-**neustart** startet das CrowPanel nach einer Rückfrage neu. **zurücksetzen** stellt nach einer Rückfrage die Werkseinstellungen her: Alle WLAN-Profile und Einstellungen gehen dabei verloren. Es ist kein normaler Schritt bei einem Firmware-Update.
+**neustart** startet das CrowPanel nach einer Rückfrage neu. **zurücksetzen** stellt nach einer Rückfrage die Werkseinstellungen her: Alle WLAN-Profile, die PIN und die Einstellungen gehen dabei verloren, ebenso die gesicherten Radiowerte (Lautstärke, Klangregler, Senderwahl und Visualisierung), die eigenen Farben des Themas Individuell und das FTP-Passwort. Die Senderliste bleibt erhalten. Es ist kein normaler Schritt bei einem Firmware-Update.
 
 ## Sperren und Entsperren
 

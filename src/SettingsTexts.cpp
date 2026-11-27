@@ -41,6 +41,7 @@ namespace
         {"ändern", "edit"},
         {"Gespeichert", "Saved"},
         {"Einstellungen gespeichert.\nEin Neustart übernimmt die Änderungen.", "Settings saved.\nA restart applies the changes."},
+        {"Die WLAN-Einstellungen wurden gespeichert.", "The Wi-Fi settings have been saved."},
         {"neustart", "restart"},
         {"später", "later"},
         {"Ungespeicherte Änderungen", "Unsaved changes"},
